@@ -20,6 +20,10 @@ const DDL_STATEMENTS = [
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "streakCount" INTEGER NOT NULL DEFAULT 0,
     "lastActiveDate" TEXT,
+    "avatarUrl" TEXT,
+    "college" TEXT,
+    "period" TEXT,
+    "targetSpecialty" TEXT,
     CONSTRAINT "User_referredById_fkey" FOREIGN KEY ("referredById") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
   );`,
 
@@ -186,7 +190,22 @@ async function main() {
   for (const statement of DDL_STATEMENTS) {
     await client.execute(statement);
   }
-  console.log("✅ [Turso] Tabelas e índices criados com sucesso.");
+
+  // Migrações incrementais para adicionar colunas em bancos Turso já existentes
+  const ALTER_STATEMENTS = [
+    `ALTER TABLE "User" ADD COLUMN "avatarUrl" TEXT;`,
+    `ALTER TABLE "User" ADD COLUMN "college" TEXT;`,
+    `ALTER TABLE "User" ADD COLUMN "period" TEXT;`,
+    `ALTER TABLE "User" ADD COLUMN "targetSpecialty" TEXT;`,
+  ];
+  for (const alter of ALTER_STATEMENTS) {
+    try {
+      await client.execute(alter);
+    } catch {
+      // Ignora se a coluna já existir no banco
+    }
+  }
+  console.log("✅ [Turso] Tabelas e índices criados/atualizados com sucesso.");
 
   const adapter = new PrismaLibSql({ url, authToken });
   const prisma = new PrismaClient({ adapter });

@@ -41,8 +41,22 @@ export async function POST(request: Request) {
     return NextResponse.json({
       user: { id: user.id, name: user.name, email: user.email },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Login error:", error);
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
+    const err = error as { message?: string; code?: string; name?: string };
+    const isDbError =
+      err?.message?.includes("database") ||
+      err?.message?.includes("connect") ||
+      err?.message?.includes("no such") ||
+      err?.code === "P1001" ||
+      err?.code === "P2021" ||
+      err?.name === "PrismaClientInitializationError" ||
+      err?.name === "PrismaClientKnownRequestError";
+
+    const errorMsg = isDbError
+      ? `Banco de dados: ${err?.message?.split("\n").pop() || "Erro de conexão. Verifique TURSO_DATABASE_URL na Vercel."}`
+      : "Erro interno do servidor";
+
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }
