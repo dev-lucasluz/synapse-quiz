@@ -121,25 +121,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          {/* Demo credential box */}
-          <div className="mt-5 rounded-lg border border-teal-100 bg-teal-50/70 p-3 text-xs dark:border-teal-900/50 dark:bg-teal-950/30">
-            <p className="font-semibold text-teal-800 dark:text-teal-300">Acesso Rápido de Teste:</p>
-            <div className="mt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail("demo@synapse.med");
-                  setPassword("senha-removida");
-                  setError("");
-                }}
-                className="flex w-full items-center justify-between rounded-md border border-teal-200 bg-white px-2.5 py-1.5 text-left text-xs text-teal-900 transition-colors hover:bg-teal-100/60 dark:border-teal-800 dark:bg-zinc-800 dark:text-teal-200"
-              >
-                <span className="font-medium">🩺 Estudante Demo (Acesso Rápido)</span>
-                <span className="font-mono text-[11px] text-zinc-500">senha-removida</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Footer Link */}
