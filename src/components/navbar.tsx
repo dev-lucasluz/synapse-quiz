@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "@/components/theme-provider";
-import { Sun, Moon, Brain, BookOpen, LayoutDashboard, LogOut, Share2, Zap } from "lucide-react";
+import { Sun, Moon, Brain, BookOpen, LayoutDashboard, LogOut, Share2, Zap, Target } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -19,9 +19,10 @@ export function Navbar({ userName, plan }: NavbarProps) {
   const navLinks = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/quiz", label: "Quiz Diário", icon: Brain },
-    { href: "/notebook", label: "Caderno de Erros", icon: BookOpen },
+    { href: "/notebook", label: "Caderno", icon: BookOpen },
+    { href: "/simulation", label: "Simulado", icon: Target, isPro: true },
     { href: "/referral", label: "Indicações", icon: Share2 },
-    { href: "/pricing", label: "Planos", icon: Zap },
+    { href: "/pricing", label: "Plano PRO", icon: Zap, badge: "Em Breve" },
   ];
 
   async function handleLogout() {
@@ -44,21 +45,31 @@ export function Navbar({ userName, plan }: NavbarProps) {
 
         {/* Nav Links */}
         <div className="hidden items-center gap-1 md:flex">
-          {navLinks.map(({ href, label, icon: Icon }) => {
+          {navLinks.map(({ href, label, icon: Icon, isPro, badge }) => {
             const isActive = pathname === href;
             return (
               <Link
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+                  "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
                   isActive
                     ? "bg-teal-50 text-teal-700 dark:bg-teal-950/70 dark:text-teal-400 font-semibold"
                     : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                 )}
               >
                 <Icon size={14} className={isActive ? "text-teal-700 dark:text-teal-400" : "text-zinc-400 dark:text-zinc-500"} />
-                {label}
+                <span>{label}</span>
+                {isPro && (
+                  <span className="rounded-full bg-teal-100 px-1 py-0.2 text-[9px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                    PRO
+                  </span>
+                )}
+                {badge && (
+                  <span className="rounded-full bg-amber-100 px-1.5 py-0.2 text-[9px] font-bold text-amber-800 dark:bg-amber-950/80 dark:text-amber-300">
+                    {badge}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -122,7 +133,7 @@ export function Navbar({ userName, plan }: NavbarProps) {
               )}
             >
               <Icon size={16} />
-              <span>{label.split(" ")[0]}</span>
+              <span>{label === "Plano PRO" ? "PRO" : label.split(" ")[0]}</span>
             </Link>
           );
         })}

@@ -29,12 +29,13 @@ export default function LoginPage() {
 
       if (!res.ok) {
         setError(data.error || "Credenciais inválidas");
+        setLoading(false);
         return;
       }
-      router.push("/dashboard");
+      // Redireciona com reload completo garantindo leitura do cookie de sessão
+      window.location.href = "/dashboard";
     } catch {
       setError("Erro ao conectar com o servidor");
-    } finally {
       setLoading(false);
     }
   }
@@ -57,7 +58,7 @@ export default function LoginPage() {
 
         {/* Card Form */}
         <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} method="POST" action="#" className="space-y-4">
             <div>
               <label className="mb-1.5 block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                 E-mail acadêmico ou pessoal
@@ -123,10 +124,21 @@ export default function LoginPage() {
 
           {/* Demo credential box */}
           <div className="mt-5 rounded-lg border border-teal-100 bg-teal-50/70 p-3 text-xs dark:border-teal-900/50 dark:bg-teal-950/30">
-            <p className="font-semibold text-teal-800 dark:text-teal-300">Acesso Rápido de Avaliação:</p>
-            <p className="mt-0.5 text-zinc-600 dark:text-zinc-400">
-              <span className="font-mono text-zinc-800 dark:text-zinc-200">demo@synapse.med</span> / <span className="font-mono text-zinc-800 dark:text-zinc-200">senha-removida</span>
-            </p>
+            <p className="font-semibold text-teal-800 dark:text-teal-300">Acesso Rápido de Teste:</p>
+            <div className="mt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail("demo@synapse.med");
+                  setPassword("senha-removida");
+                  setError("");
+                }}
+                className="flex w-full items-center justify-between rounded-md border border-teal-200 bg-white px-2.5 py-1.5 text-left text-xs text-teal-900 transition-colors hover:bg-teal-100/60 dark:border-teal-800 dark:bg-zinc-800 dark:text-teal-200"
+              >
+                <span className="font-medium">🩺 Estudante Demo (Acesso Rápido)</span>
+                <span className="font-mono text-[11px] text-zinc-500">senha-removida</span>
+              </button>
+            </div>
           </div>
         </div>
 

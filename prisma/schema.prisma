@@ -35,10 +35,17 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  streakCount    Int      @default(0)
+  lastActiveDate String?
+
   reviews      UserCardReview[]
   dailyUsage   DailyUsage[]
   bookmarks    Bookmark[]
   subscription Subscription?
+  notes        QuestionNote[]
+  reports      QuestionReport[]
+  answerLogs   AnswerLog[]
+  simulations  Simulation[]
 }
 
 // ─── Subscription ─────────────────────────────────────────────────────────────
@@ -73,6 +80,7 @@ model Subject {
 model Question {
   id            String  @id @default(uuid())
   subjectId     String
+  subtopic      String? // Subtópico temático específico da questão
   text          String
   imageUrl      String?
   options       String  // JSON: ["texto A", "texto B", "texto C", "texto D"]
@@ -85,9 +93,15 @@ model Question {
   // Questões "pro" ficam bloqueadas para usuários free
   accessLevel   String  @default("free")
 
-  subject   Subject          @relation(fields: [subjectId], references: [id])
-  reviews   UserCardReview[]
-  bookmarks Bookmark[]
+  // Status de ativação da questão no sistema (permite inativar para atualizações futuras)
+  isActive      Boolean @default(true)
+
+  subject    Subject          @relation(fields: [subjectId], references: [id])
+  reviews    UserCardReview[]
+  bookmarks  Bookmark[]
+  notes      QuestionNote[]
+  reports    QuestionReport[]
+  answerLogs AnswerLog[]
 }
 
 model UserCardReview {
@@ -129,3 +143,60 @@ model DailyUsage {
 
   @@unique([userId, date])
 }
+
+model QuestionNote {
+  id         String   @id @default(uuid())
+  userId     String
+  questionId String
+  content    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questionId])
+}
+
+model QuestionReport {
+  id         String   @id @default(uuid())
+  userId     String
+  questionId String
+  reason     String   // "gabarito_errado" | "desatualizado" | "erro_digitacao" | "outro"
+  comment    String?
+  status     String   @default("pending") // "pending" | "resolved"
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model AnswerLog {
+  id               String   @id @default(uuid())
+  userId           String
+  questionId       String
+  selectedOption   Int
+  isCorrect        Boolean
+  mode             String   // "daily" | "notebook" | "simulation"
+  timeSpentSeconds Int?
+  createdAt        DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model Simulation {
+  id              String   @id @default(uuid())
+  userId          String
+  title           String
+  subjectName     String?
+  totalQuestions  Int
+  correctCount    Int
+  durationSeconds Int
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+

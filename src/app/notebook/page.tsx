@@ -33,13 +33,15 @@ export default function NotebookPage() {
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState("");
   const [userPlan, setUserPlan] = useState("free");
+  const [skippedIds, setSkippedIds] = useState<string[]>([]);
 
-  const fetchQuestion = useCallback(async () => {
+  const fetchQuestion = useCallback(async (excludeList: string[] = []) => {
     setLoading(true);
     try {
+      const query = excludeList.length > 0 ? `?exclude=${excludeList.join(",")}` : "";
       const [meRes, notebookRes] = await Promise.all([
         fetch("/api/auth/me"),
-        fetch("/api/quiz/notebook"),
+        fetch(`/api/quiz/notebook${query}`),
       ]);
       if (meRes.status === 401) { router.push("/login"); return; }
       const meData = await meRes.json();
@@ -52,7 +54,20 @@ export default function NotebookPage() {
     }
   }, [router]);
 
-  useEffect(() => { fetchQuestion(); }, [fetchQuestion]);
+  useEffect(() => {
+    fetchQuestion(skippedIds);
+  }, [fetchQuestion]);
+
+  const handleSkip = () => {
+    if (!data?.question) return;
+    const nextSkipped = [...skippedIds, data.question.id];
+    setSkippedIds(nextSkipped);
+    fetchQuestion(nextSkipped);
+  };
+
+  const handleAnswered = () => {
+    fetchQuestion(skippedIds);
+  };
 
   if (loading) {
     return (
@@ -151,7 +166,8 @@ export default function NotebookPage() {
           <QuizCard
             question={data.question}
             mode="notebook"
-            onAnswered={fetchQuestion}
+            onAnswered={handleAnswered}
+            onSkip={handleSkip}
             initialBookmarked={true}
           />
         )}

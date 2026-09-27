@@ -2,7 +2,8 @@ import { createClient } from "@libsql/client";
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import bcrypt from "bcryptjs";
-import { expansionQuestions } from "../prisma/seed-expansion";
+import fs from "fs";
+import path from "path";
 
 const DDL_STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS "User" (
@@ -17,6 +18,8 @@ const DDL_STATEMENTS = [
     "stripeSubscriptionId" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "streakCount" INTEGER NOT NULL DEFAULT 0,
+    "lastActiveDate" TEXT,
     CONSTRAINT "User_referredById_fkey" FOREIGN KEY ("referredById") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
   );`,
 
@@ -42,6 +45,7 @@ const DDL_STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS "Question" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "subjectId" TEXT NOT NULL,
+    "subtopic" TEXT,
     "text" TEXT NOT NULL,
     "imageUrl" TEXT,
     "options" TEXT NOT NULL,
@@ -50,6 +54,7 @@ const DDL_STATEMENTS = [
     "source" TEXT NOT NULL,
     "year" INTEGER NOT NULL,
     "accessLevel" TEXT NOT NULL DEFAULT 'free',
+    "isActive" BOOLEAN NOT NULL DEFAULT 1,
     CONSTRAINT "Question_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subject" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
   );`,
 
@@ -84,6 +89,54 @@ const DDL_STATEMENTS = [
     CONSTRAINT "DailyUsage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
   );`,
 
+  `CREATE TABLE IF NOT EXISTS "QuestionNote" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "questionId" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "QuestionNote_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "QuestionNote_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  );`,
+
+  `CREATE TABLE IF NOT EXISTS "QuestionReport" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "questionId" TEXT NOT NULL,
+    "reason" TEXT NOT NULL,
+    "comment" TEXT,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "QuestionReport_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "QuestionReport_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  );`,
+
+  `CREATE TABLE IF NOT EXISTS "AnswerLog" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "questionId" TEXT NOT NULL,
+    "selectedOption" INTEGER NOT NULL,
+    "isCorrect" BOOLEAN NOT NULL,
+    "mode" TEXT NOT NULL,
+    "timeSpentSeconds" INTEGER,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "AnswerLog_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "AnswerLog_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  );`,
+
+  `CREATE TABLE IF NOT EXISTS "Simulation" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "subjectName" TEXT,
+    "totalQuestions" INTEGER NOT NULL,
+    "correctCount" INTEGER NOT NULL,
+    "durationSeconds" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Simulation_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  );`,
+
   `CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");`,
   `CREATE UNIQUE INDEX IF NOT EXISTS "User_referralCode_key" ON "User"("referralCode");`,
   `CREATE UNIQUE INDEX IF NOT EXISTS "User_stripeCustomerId_key" ON "User"("stripeCustomerId");`,
@@ -93,6 +146,8 @@ const DDL_STATEMENTS = [
   `CREATE UNIQUE INDEX IF NOT EXISTS "UserCardReview_userId_questionId_key" ON "UserCardReview"("userId", "questionId");`,
   `CREATE UNIQUE INDEX IF NOT EXISTS "Bookmark_userId_questionId_key" ON "Bookmark"("userId", "questionId");`,
   `CREATE UNIQUE INDEX IF NOT EXISTS "DailyUsage_userId_date_key" ON "DailyUsage"("userId", "date");`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS "QuestionNote_userId_questionId_key" ON "QuestionNote"("userId", "questionId");`,
+  `CREATE INDEX IF NOT EXISTS "AnswerLog_userId_createdAt_idx" ON "AnswerLog"("userId", "createdAt");`,
 ];
 
 const INITIAL_SUBJECTS = [
@@ -133,7 +188,6 @@ async function main() {
   }
   console.log("✅ [Turso] Tabelas e índices criados com sucesso.");
 
-  // Inicializar Prisma Client conectado ao Turso
   const adapter = new PrismaLibSql({ url, authToken });
   const prisma = new PrismaClient({ adapter });
 
@@ -179,43 +233,46 @@ async function main() {
   });
   console.log(`✅ [Turso] Usuários criados: ${demoUser.email} (Free) e ${proUser.email} (Pro Ilimitado).`);
 
-  // 4. Inserir Questões
-  console.log(`📚 [Turso] Inserindo acervo de questões (${expansionQuestions.length} questões)...`);
+  // 4. Inserir Questões do arquivo completo
+  const jsonPath = path.resolve(process.cwd(), "synapse_questoes_completo.json");
   let inserted = 0;
-  for (const q of expansionQuestions) {
-    const normalizedName = q.subjectName === "Saúde Coletiva e Epidemiologia" ? "Saúde Coletiva & Epidemiologia" : q.subjectName;
-    const subjectId = subjectMap[normalizedName];
-    if (!subjectId) continue;
 
-    const exists = await prisma.question.findFirst({ where: { text: q.text } });
-    if (!exists) {
-      await prisma.question.create({
-        data: {
-          subjectId,
-          text: q.text,
-          options: typeof q.options === "string" ? q.options : JSON.stringify(q.options),
-          correctOption: q.correctOption,
-          explanation: q.explanation,
-          source: q.source,
-          year: q.year,
-          imageUrl: q.imageUrl ?? null,
-        },
-      });
-      inserted++;
-    }
-  }
+  if (fs.existsSync(jsonPath)) {
+    const rawData = fs.readFileSync(jsonPath, "utf8");
+    const questionsData = JSON.parse(rawData);
+    console.log(`📚 [Turso] Sincronizando ${questionsData.length} questões...`);
 
-  // 5. Adicionar favoritos de imagens para ambos os usuários
-  const imgQuestions = await prisma.question.findMany({ where: { imageUrl: { not: null } } });
-  for (const u of [demoUser, proUser]) {
-    for (const imgQ of imgQuestions) {
-      const bExists = await prisma.bookmark.findUnique({
-        where: { userId_questionId: { userId: u.id, questionId: imgQ.id } },
-      });
-      if (!bExists) {
-        await prisma.bookmark.create({
-          data: { userId: u.id, questionId: imgQ.id },
+    for (const q of questionsData) {
+      const normalizedName =
+        q.disciplina === "Saúde Coletiva e Epidemiologia"
+          ? "Saúde Coletiva & Epidemiologia"
+          : q.disciplina;
+
+      const subjectId = subjectMap[normalizedName];
+      if (!subjectId) continue;
+
+      const qId = q.id || undefined;
+      const questionPayload = {
+        subjectId,
+        subtopic: q.subtopico || null,
+        text: q.enunciado,
+        imageUrl: q.imagemUrl || null,
+        options: JSON.stringify(q.alternativas),
+        correctOption: q.alternativaCorretaIndice,
+        explanation: q.comentarioExplicativo,
+        source: q.bancaFonte || "Banca Médica",
+        year: q.ano || 2024,
+        accessLevel: q.nivelAcesso || "free",
+        isActive: q.ativo !== false,
+      };
+
+      if (qId) {
+        await prisma.question.upsert({
+          where: { id: qId },
+          update: questionPayload,
+          create: { id: qId, ...questionPayload },
         });
+        inserted++;
       }
     }
   }
@@ -225,7 +282,7 @@ async function main() {
 
   console.log("\n========================================================");
   console.log(`🎉 BANCO TURSO SINCRONIZADO COM SUCESSO!`);
-  console.log(`📊 Questões inseridas nesta sessão: ${inserted}`);
+  console.log(`📊 Questões processadas: ${inserted}`);
   console.log(`📊 TOTAL de questões no Turso: ${total}`);
   console.log(`🖼️ TOTAL de questões COM IMAGEM no Turso: ${totalImgs}`);
   console.log(`👤 Usuário Ilimitado: pro@exemplo.com / (senha removida)`);

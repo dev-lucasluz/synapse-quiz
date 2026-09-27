@@ -12,7 +12,12 @@ export async function GET() {
 
   const subjects = await prisma.subject.findMany({
     include: {
-      _count: { select: { questions: true } },
+      _count: { select: { questions: { where: { isActive: true } } } },
+      questions: {
+        where: { isActive: true },
+        select: { subtopic: true },
+        distinct: ["subtopic"],
+      },
     },
     orderBy: [{ period: "asc" }, { name: "asc" }],
   });
@@ -36,7 +41,11 @@ export async function GET() {
     category: s.category,
     totalQuestions: s._count.questions,
     reviewedQuestions: reviewedBySubject.get(s.id) ?? 0,
+    subtopics: s.questions.map((q) => q.subtopic).filter(Boolean) as string[],
   }));
 
-  return NextResponse.json({ subjects: data });
+  return NextResponse.json(
+    { subjects: data },
+    { headers: { "Cache-Control": "private, max-age=15, stale-while-revalidate=60" } }
+  );
 }

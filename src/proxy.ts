@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { verifySession } from "@/lib/auth";
 
 // Rotas que requerem autenticação
-const PROTECTED_ROUTES = ["/dashboard", "/quiz", "/notebook", "/referral"];
+const PROTECTED_ROUTES = ["/dashboard", "/quiz", "/notebook", "/referral", "/simulation"];
 
 // Rotas só para visitantes (redireciona autenticados para dashboard)
 const AUTH_ROUTES = ["/login", "/register"];
@@ -27,14 +27,18 @@ export async function proxy(request: NextRequest) {
   // Se rota protegida e sem sessão → login
   if (PROTECTED_ROUTES.some((r) => pathname.startsWith(r))) {
     if (!session) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
     }
   }
 
   // Se rota de auth e já autenticado → dashboard
   if (AUTH_ROUTES.some((r) => pathname.startsWith(r))) {
     if (session) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
     }
   }
 

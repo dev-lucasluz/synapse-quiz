@@ -81,7 +81,7 @@ function SubjectCard({ subject }: { subject: Subject }) {
       {/* Button */}
       <button
         onClick={() => {
-          window.location.href = "/quiz";
+          window.location.href = `/quiz?subjectId=${encodeURIComponent(subject.id)}`;
         }}
         className="mt-auto flex items-center justify-between rounded-lg border border-zinc-200 bg-zinc-50/70 px-3 py-2 text-xs font-semibold text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-300 dark:hover:bg-zinc-800"
       >

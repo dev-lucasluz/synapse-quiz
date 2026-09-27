@@ -261,7 +261,7 @@ export default function DashboardPage() {
         </header>
 
         {/* ── Cards de Ação Rápida ─────────────────────────────────────────── */}
-        <section className="mb-8 grid gap-4 sm:grid-cols-2">
+        <section className="mb-8 grid gap-4 sm:grid-cols-3">
           <QuotaCard
             icon={Brain}
             label="Quiz Diário · 5 min"
@@ -277,8 +277,36 @@ export default function DashboardPage() {
             used={quota.notebookUsed}
             max={quota.notebookMax}
             href="/notebook"
-            buttonLabel="Revisar Caderno de Erros"
+            buttonLabel="Revisar Caderno"
           />
+          <div className="flex flex-col justify-between rounded-xl border border-teal-200 bg-white p-5 shadow-xs dark:border-teal-900/60 dark:bg-zinc-900">
+            <div>
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-400">
+                  <Target size={16} />
+                </div>
+                <span className="rounded-full bg-teal-700 px-2 py-0.5 text-[10px] font-bold uppercase text-white dark:bg-teal-600">
+                  PRO
+                </span>
+              </div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                Simulado Cronometrado
+              </p>
+              <p className="mt-1 text-sm font-bold text-zinc-900 dark:text-zinc-50">
+                Ambiente de Prova
+              </p>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                10 a 30 questões com timer estilo ENARE e residência.
+              </p>
+            </div>
+            <Link
+              href="/simulation"
+              className="mt-4 flex items-center justify-center gap-1.5 rounded-lg bg-teal-700 py-2 text-xs font-bold text-white shadow-2xs transition-colors hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+            >
+              <span>{user.plan === "pro" ? "Iniciar Simulado" : "Abrir Simulado"}</span>
+              <ArrowRight size={13} />
+            </Link>
+          </div>
         </section>
 
         {/* ── Métricas Semanais ────────────────────────────────────────────── */}

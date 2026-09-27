@@ -56,22 +56,33 @@ export async function GET() {
   // Weekly totals
   const weeklyTotal = weeklyData.reduce((sum, d) => sum + d.total, 0);
 
-  // Accuracy: count correct vs total reviews in last 7 days
-  // We approximate from UserCardReview updated in the last 7 days
-  const recentReviews = await prisma.userCardReview.findMany({
+  // Fetch accuracy from real AnswerLogs in the last 7 days
+  const answerLogs = await prisma.answerLog.findMany({
     where: {
       userId: session.userId,
-      lastReviewedAt: { gte: sevenDaysAgo },
+      createdAt: { gte: sevenDaysAgo },
     },
-    select: { repetitionCount: true, easeFactor: true },
+    select: { isCorrect: true },
   });
 
-  // A review is "correct" if easeFactor > 2.3 (not heavily penalized)
-  // More accurately: easeFactor starts at 2.5, goes down on wrong answers
-  // We approximate: if easeFactor >= 2.4 after recent reviews, likely correct
-  const correctApprox = recentReviews.filter((r) => r.easeFactor >= 2.3).length;
-  const weeklyAccuracy =
-    recentReviews.length > 0 ? Math.round((correctApprox / recentReviews.length) * 100) : 0;
+  let weeklyAccuracy = 0;
+  if (answerLogs.length > 0) {
+    const correctCount = answerLogs.filter((a) => a.isCorrect).length;
+    weeklyAccuracy = Math.round((correctCount / answerLogs.length) * 100);
+  } else {
+    // Fallback if no AnswerLogs exist yet
+    const recentReviews = await prisma.userCardReview.findMany({
+      where: {
+        userId: session.userId,
+        lastReviewedAt: { gte: sevenDaysAgo },
+      },
+      select: { easeFactor: true },
+    });
+    if (recentReviews.length > 0) {
+      const correctApprox = recentReviews.filter((r) => r.easeFactor >= 2.3).length;
+      weeklyAccuracy = Math.round((correctApprox / recentReviews.length) * 100);
+    }
+  }
 
   // SRS Retention: questions with intervalDays > 21 (long-term memory)
   const longTermCount = await prisma.userCardReview.count({
@@ -81,36 +92,21 @@ export async function GET() {
     },
   });
 
-  // Streak: consecutive days with any study activity
-  let streak = 0;
+  // O(1) Streak retrieval (zero N+1 query loops)
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { streakCount: true, lastActiveDate: true },
+  });
+
+  let streak = user?.streakCount || 0;
   const today = new Date().toISOString().split("T")[0];
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-  // Check backwards from today
-  let checkDate = new Date();
-  while (true) {
-    const dateStr = checkDate.toISOString().split("T")[0];
-    const hasActivity = await prisma.dailyUsage.findFirst({
-      where: {
-        userId: session.userId,
-        date: dateStr,
-        OR: [
-          { mainCardsReviewed: { gt: 0 } },
-          { notebookCardsReviewed: { gt: 0 } },
-        ],
-      },
-    });
-
-    if (!hasActivity) {
-      // Allow today to be empty if streak started yesterday
-      if (dateStr === today && streak === 0) {
-        checkDate.setDate(checkDate.getDate() - 1);
-        continue;
-      }
-      break;
-    }
-    streak++;
-    checkDate.setDate(checkDate.getDate() - 1);
-    if (streak > 365) break; // safety cap
+  // If user hasn't studied today or yesterday, streak has expired
+  if (user?.lastActiveDate !== today && user?.lastActiveDate !== yesterdayStr) {
+    streak = 0;
   }
 
   return NextResponse.json({

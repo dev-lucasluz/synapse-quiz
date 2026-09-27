@@ -5,7 +5,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { QuizCard } from "@/components/quiz-card";
 import { ReferralModal } from "@/components/referral-modal";
-import { Brain, BookOpen, Loader2, RefreshCw, Image as ImageIcon, Sparkles } from "lucide-react";
+import {
+  Brain,
+  BookOpen,
+  Loader2,
+  Sparkles,
+  SkipForward,
+  GraduationCap,
+  X,
+  Layers,
+  ChevronDown,
+} from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +28,7 @@ interface Question {
   year: number;
   subject: string;
   period: number;
+  subtopic?: string | null;
 }
 
 interface DailyData {
@@ -35,49 +46,116 @@ interface MeData {
   quota: { mainUsed: number; mainMax: number; referralCount: number };
 }
 
+interface SubjectItem {
+  id: string;
+  name: string;
+  period: number;
+  category: string;
+  totalQuestions: number;
+  reviewedQuestions: number;
+  subtopics: string[];
+}
+
 function QuizContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const initialFilter = searchParams.get("filter") === "images" ? "images" : "all";
+  const initialSubjectId = searchParams.get("subjectId") || "";
+  const initialSubtopic = searchParams.get("subtopic") || "";
 
   const [filter, setFilter] = useState<"all" | "images">(initialFilter);
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string>(initialSubjectId);
+  const [selectedSubtopic, setSelectedSubtopic] = useState<string>(initialSubtopic);
+  const [subjects, setSubjects] = useState<SubjectItem[]>([]);
   const [data, setData] = useState<DailyData | null>(null);
   const [meData, setMeData] = useState<MeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showReferralModal, setShowReferralModal] = useState(false);
+  const [skippedIds, setSkippedIds] = useState<string[]>([]);
 
-  const fetchQuestion = useCallback(async (activeFilter: "all" | "images", showModal = false) => {
-    setLoading(true);
-    try {
-      const url = activeFilter === "images" ? "/api/quiz/daily?filter=images" : "/api/quiz/daily";
-      const [meRes, quizRes] = await Promise.all([
-        fetch("/api/auth/me"),
-        fetch(url),
-      ]);
-      if (meRes.status === 401) { router.push("/login"); return; }
-      const me: MeData = await meRes.json();
-      setMeData(me);
-      const quizData: DailyData = await quizRes.json();
-      setData(quizData);
+  // Carregar lista de matérias com seus subtópicos
+  useEffect(() => {
+    fetch("/api/subjects")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((resData) => {
+        if (resData?.subjects) setSubjects(resData.subjects);
+      })
+      .catch(console.error);
+  }, []);
 
-      if (quizData.limitReached && showModal) {
-        setShowReferralModal(true);
+  const activeSubjectObj = subjects.find((s) => s.id === selectedSubjectId);
+
+  const fetchQuestion = useCallback(
+    async (
+      activeFilter: "all" | "images",
+      subjectId = selectedSubjectId,
+      subtopic = selectedSubtopic,
+      showModal = false,
+      excludeList: string[] = []
+    ) => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams();
+        if (activeFilter === "images") params.set("filter", "images");
+        if (subjectId) params.set("subjectId", subjectId);
+        if (subtopic) params.set("subtopic", subtopic);
+        if (excludeList.length > 0) params.set("exclude", excludeList.join(","));
+        const queryString = params.toString() ? `?${params.toString()}` : "";
+        const url = `/api/quiz/daily${queryString}`;
+
+        const [meRes, quizRes] = await Promise.all([
+          fetch("/api/auth/me"),
+          fetch(url),
+        ]);
+        if (meRes.status === 401) { router.push("/login"); return; }
+        const me: MeData = await meRes.json();
+        setMeData(me);
+        const quizData: DailyData = await quizRes.json();
+        setData(quizData);
+
+        if (quizData.limitReached && showModal) {
+          setShowReferralModal(true);
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  }, [router]);
+    },
+    [router, selectedSubjectId, selectedSubtopic]
+  );
 
   useEffect(() => {
-    fetchQuestion(filter);
-  }, [filter, fetchQuestion]);
+    fetchQuestion(filter, selectedSubjectId, selectedSubtopic, false, skippedIds);
+  }, [filter, selectedSubjectId, selectedSubtopic, fetchQuestion]);
 
   const handleAnswered = () => {
-    fetchQuestion(filter, true);
+    fetchQuestion(filter, selectedSubjectId, selectedSubtopic, true, skippedIds);
+  };
+
+  const handleSkip = () => {
+    if (!data?.question) return;
+    const nextSkipped = [...skippedIds, data.question.id];
+    setSkippedIds(nextSkipped);
+    fetchQuestion(filter, selectedSubjectId, selectedSubtopic, false, nextSkipped);
   };
 
   const handleFilterChange = (newFilter: "all" | "images") => {
     setFilter(newFilter);
+    setSkippedIds([]);
+    fetchQuestion(newFilter, selectedSubjectId, selectedSubtopic, false, []);
+  };
+
+  const handleSubjectChange = (newSubjectId: string) => {
+    setSelectedSubjectId(newSubjectId);
+    setSelectedSubtopic(""); // reset subtópico ao trocar de matéria
+    setSkippedIds([]);
+    fetchQuestion(filter, newSubjectId, "", false, []);
+  };
+
+  const handleSubtopicChange = (newSubtopic: string) => {
+    setSelectedSubtopic(newSubtopic);
+    setSkippedIds([]);
+    fetchQuestion(filter, selectedSubjectId, newSubtopic, false, []);
   };
 
   function QuotaDots({ used, max }: { used: number; max: number }) {
@@ -106,6 +184,9 @@ function QuizContent() {
     );
   }
 
+  // Agrupar matérias por período para o select
+  const periods = [1, 2, 3, 4, 5, 6];
+
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
       <Navbar userName={meData?.user.name} plan={meData?.user.plan} />
@@ -121,43 +202,52 @@ function QuizContent() {
       )}
 
       <main className="mx-auto max-w-3xl px-4 py-8">
-        {/* Filter Pill Switcher */}
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => handleFilterChange("all")}
-              className={cn(
-                "rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all",
-                filter === "all"
-                  ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 shadow-xs"
-                  : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400"
-              )}
-            >
-              Todas as Questões (Geral)
-            </button>
-            <button
-              onClick={() => handleFilterChange("images")}
-              className={cn(
-                "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all",
-                filter === "images"
-                  ? "border-teal-700 bg-teal-700 text-white dark:border-teal-500 dark:bg-teal-600 shadow-xs"
-                  : "border-teal-200 bg-teal-50/80 text-teal-800 hover:border-teal-300 dark:border-teal-900 dark:bg-teal-950/40 dark:text-teal-300"
-              )}
-            >
-              <ImageIcon size={13} />
-              Casos Clínicos com Imagem
-              <span className="ml-1 rounded-full bg-teal-800/20 px-1.5 py-0.2 text-[10px] font-bold dark:bg-teal-300/20">
-                20
-              </span>
-            </button>
-          </div>
+        {/* Painel de Filtros e Tópicos */}
+        <div className="mb-4 space-y-3">
+          {/* Barra Unificada de Seleção de Disciplina */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white p-3 shadow-2xs dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-400">
+                <Brain size={15} />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                  Disciplina Selecionada
+                </p>
+                <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                  {activeSubjectObj ? activeSubjectObj.name : "📚 Todas as Matérias (Misto Geral)"}
+                </p>
+              </div>
+            </div>
 
-          {filter === "images" && (
-            <span className="flex items-center gap-1 text-[11px] font-medium text-teal-700 dark:text-teal-400">
-              <Sparkles size={12} />
-              Modo Visual Ativo (Radio, Dermato, ECG, Histo, USG)
-            </span>
-          )}
+            {/* Dropdown de Seleção de Tópico / Disciplina */}
+            <div className="relative min-w-[240px]">
+              <select
+                value={selectedSubjectId}
+                onChange={(e) => handleSubjectChange(e.target.value)}
+                className="w-full appearance-none rounded-lg border border-zinc-200 bg-zinc-50/70 py-2 pl-3 pr-8 text-xs font-medium text-zinc-800 shadow-2xs outline-none transition-colors focus:border-teal-700 focus:bg-white focus:ring-1 focus:ring-teal-700 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:focus:bg-zinc-800"
+              >
+                <option value="">📚 Todas as Matérias (Misto Geral)</option>
+                {periods.map((p) => {
+                  const pSubjects = subjects.filter((s) => s.period === p);
+                  if (pSubjects.length === 0) return null;
+                  return (
+                    <optgroup key={p} label={`${p}º Período`}>
+                      {pSubjects.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name} ({s.totalQuestions} questões)
+                        </option>
+                      ))}
+                    </optgroup>
+                  );
+                })}
+              </select>
+              <ChevronDown
+                size={13}
+                className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Loading state */}
@@ -175,15 +265,19 @@ function QuizContent() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="mb-1.5 flex items-center justify-between gap-2">
-                <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                  {filter === "images" ? "Sessão: Casos Clínicos Ilustrados" : "Sessão Diária de Estudos"}
+                <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 truncate">
+                  {selectedSubtopic
+                    ? `Subtópico: ${selectedSubtopic}`
+                    : activeSubjectObj
+                    ? `Disciplina: ${activeSubjectObj.name}`
+                    : "Sessão Diária de Estudos"}
                 </p>
                 {data.plan === "pro" ? (
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 shrink-0">
                     Acesso Ilimitado
                   </span>
                 ) : (
-                  <span className="text-xs font-semibold tabular-nums text-zinc-700 dark:text-zinc-300">
+                  <span className="text-xs font-semibold tabular-nums text-zinc-700 dark:text-zinc-300 shrink-0">
                     {data.used} de {data.max}
                   </span>
                 )}
@@ -191,11 +285,12 @@ function QuizContent() {
               <QuotaDots used={data.used ?? 0} max={data.max ?? 10} />
             </div>
             <button
-              onClick={() => fetchQuestion(filter)}
-              className="ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
-              title="Próxima questão"
+              onClick={handleSkip}
+              className="ml-2 flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-zinc-600 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:text-white"
+              title="Pular para outra questão deste tópico (sem consumir cota)"
             >
-              <RefreshCw size={13} />
+              <SkipForward size={13} className="text-zinc-400 dark:text-zinc-400" />
+              <span>Pular</span>
             </button>
           </div>
         )}
@@ -241,6 +336,7 @@ function QuizContent() {
             question={data.question}
             mode="daily"
             onAnswered={handleAnswered}
+            onSkip={handleSkip}
           />
         )}
       </main>

@@ -14,7 +14,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
-  const { questionId, selectedOption, mode } = await request.json();
+  const body = await request.json();
+  const { questionId, selectedOption, mode, timeSpentSeconds } = body;
   // mode: "daily" | "notebook"
 
   if (questionId === undefined || selectedOption === undefined) {
@@ -76,6 +77,50 @@ export async function POST(request: Request) {
     },
     update: usageUpdate,
   });
+
+  // Record AnswerLog for high-fidelity analytics
+  const spentSeconds = typeof timeSpentSeconds === "number" ? timeSpentSeconds : null;
+  await prisma.answerLog.create({
+    data: {
+      userId: session.userId,
+      questionId,
+      selectedOption,
+      isCorrect: correct,
+      mode: mode || "daily",
+      timeSpentSeconds: spentSeconds,
+    },
+  });
+
+  // Update streak efficiently (O(1), zero N+1 loops)
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { streakCount: true, lastActiveDate: true },
+  });
+
+  if (user) {
+    let nextStreak = user.streakCount || 0;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+    if (user.lastActiveDate === today) {
+      // Already studied today - streak unchanged
+    } else if (user.lastActiveDate === yesterdayStr) {
+      // Studied yesterday - advance streak!
+      nextStreak += 1;
+    } else {
+      // First day or streak broken
+      nextStreak = 1;
+    }
+
+    await prisma.user.update({
+      where: { id: session.userId },
+      data: {
+        lastActiveDate: today,
+        streakCount: nextStreak,
+      },
+    });
+  }
 
   // Auto-bookmark on wrong answer
   if (!correct) {
