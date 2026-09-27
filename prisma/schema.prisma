@@ -1,0 +1,131 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─── Planos disponíveis ───────────────────────────────────────────────────────
+// free  → 10 questões/dia base (+ bônus referral até 20)
+// pro   → questões ilimitadas, sem ads, filtros avançados, estatísticas
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String  @id @default(uuid())
+  name         String
+  email        String  @unique
+  passwordHash String
+  referralCode String  @unique
+  referredById String?
+
+  // Plano atual: "free" | "pro"
+  // Atualizado pelo webhook do Stripe ao confirmar pagamento
+  plan         String  @default("free")
+
+  // IDs do Stripe — preenchidos na integração de pagamento
+  // null enquanto usuário nunca tentou assinar
+  stripeCustomerId     String? @unique
+  stripeSubscriptionId String? @unique
+
+  referredBy User?  @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals  User[] @relation("UserReferrals")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews      UserCardReview[]
+  dailyUsage   DailyUsage[]
+  bookmarks    Bookmark[]
+  subscription Subscription?
+}
+
+// ─── Subscription ─────────────────────────────────────────────────────────────
+// Registro de assinatura ativa. Criado/atualizado via webhook Stripe.
+// Permite histórico e gestão de cancelamentos.
+// ─────────────────────────────────────────────────────────────────────────────
+model Subscription {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id])
+
+  // Dados do Stripe
+  stripeSubscriptionId String   @unique
+  stripePriceId        String   // ID do preço/produto no Stripe
+  stripeCurrentPeriodEnd DateTime // Data de expiração do período atual
+
+  // Status: "active" | "canceled" | "past_due" | "trialing" | "incomplete"
+  status               String   @default("active")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subject {
+  id        String     @id @default(uuid())
+  name      String
+  period    Int
+  category  String
+  questions Question[]
+}
+
+model Question {
+  id            String  @id @default(uuid())
+  subjectId     String
+  text          String
+  imageUrl      String?
+  options       String  // JSON: ["texto A", "texto B", "texto C", "texto D"]
+  correctOption Int
+  explanation   String
+  source        String
+  year          Int
+
+  // Nível de acesso: "free" | "pro"
+  // Questões "pro" ficam bloqueadas para usuários free
+  accessLevel   String  @default("free")
+
+  subject   Subject          @relation(fields: [subjectId], references: [id])
+  reviews   UserCardReview[]
+  bookmarks Bookmark[]
+}
+
+model UserCardReview {
+  id              String   @id @default(uuid())
+  userId          String
+  questionId      String
+  repetitionCount Int      @default(0)
+  easeFactor      Float    @default(2.5)
+  intervalDays    Int      @default(0)
+  dueDate         DateTime @default(now())
+  lastReviewedAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+
+  @@unique([userId, questionId])
+}
+
+model Bookmark {
+  id         String   @id @default(uuid())
+  userId     String
+  questionId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+
+  @@unique([userId, questionId])
+}
+
+model DailyUsage {
+  id                    String @id @default(uuid())
+  userId                String
+  date                  String // YYYY-MM-DD
+  mainCardsReviewed     Int    @default(0)
+  notebookCardsReviewed Int    @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, date])
+}
