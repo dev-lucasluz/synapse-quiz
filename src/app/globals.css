@@ -15,6 +15,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Sidebar Layout Offsets ───────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  body.has-sidebar {
+    padding-left: 240px;
+    transition: padding-left 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: padding-left;
+  }
+  html.sidebar-collapsed body.has-sidebar {
+    padding-left: 68px;
+  }
+}
+
+@media (max-width: 767px) {
+  body.has-sidebar {
+    padding-bottom: 80px;
+  }
+}
+
 /* ── Custom Scrollbar ──────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;

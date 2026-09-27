@@ -8,17 +8,20 @@ interface DayData {
   notebook: number;
 }
 
+import { cn } from "@/lib/utils";
+
 interface WeeklyChartProps {
   data: DayData[];
+  className?: string;
 }
 
-export function WeeklyChart({ data }: WeeklyChartProps) {
+export function WeeklyChart({ data, className }: WeeklyChartProps) {
   const maxTotal = Math.max(...data.map((d) => d.total), 1);
   const today = new Date().toISOString().split("T")[0];
   const weekTotal = data.reduce((s, d) => s + d.total, 0);
 
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
+    <div className={cn("rounded-xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900", className)}>
       {/* Chart Header */}
       <div className="mb-5 flex items-baseline justify-between">
         <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">

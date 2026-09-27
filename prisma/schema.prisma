@@ -24,6 +24,12 @@ model User {
   // Atualizado pelo webhook do Stripe ao confirmar pagamento
   plan         String  @default("free")
 
+  // Perfil acadêmico e foto do estudante
+  avatarUrl       String?
+  college         String?
+  period          String?
+  targetSpecialty String?
+
   // IDs do Stripe — preenchidos na integração de pagamento
   // null enquanto usuário nunca tentou assinar
   stripeCustomerId     String? @unique

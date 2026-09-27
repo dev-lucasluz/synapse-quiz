@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { WeeklyChart } from "@/components/dashboard/weekly-chart";
 import { CurricularGrid } from "@/components/dashboard/curricular-grid";
+import { MiniLeaderboard } from "@/components/dashboard/mini-leaderboard";
 import {
   Brain,
   BookOpen,
@@ -20,7 +21,16 @@ import { cn } from "@/lib/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface UserData {
-  user: { id: string; name: string; email: string; referralCode: string; plan: string };
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    referralCode: string;
+    plan: string;
+    avatarUrl?: string | null;
+    college?: string | null;
+    period?: string | null;
+  };
   quota: {
     mainUsed: number;
     mainMax: number;
@@ -235,7 +245,13 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
-      <Navbar userName={user.name} plan={user.plan} />
+      <Navbar
+        userName={user.name}
+        plan={user.plan}
+        avatarUrl={user.avatarUrl}
+        college={user.college}
+        period={user.period}
+      />
 
       <main className="mx-auto max-w-5xl px-4 py-10">
 
@@ -350,12 +366,19 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Bar chart */}
-          {statsLoading ? (
-            <Skeleton className="h-44 rounded-xl" />
-          ) : weeklyStats ? (
-            <WeeklyChart data={weeklyStats.weeklyData} />
-          ) : null}
+          {/* Gráfico Semanal + Mini Ranking de Estudantes */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 items-stretch">
+            <div className="lg:col-span-2">
+              {statsLoading ? (
+                <Skeleton className="h-56 rounded-xl" />
+              ) : weeklyStats ? (
+                <WeeklyChart data={weeklyStats.weeklyData} className="h-full" />
+              ) : null}
+            </div>
+            <div className="lg:col-span-1">
+              <MiniLeaderboard currentUserId={user.id} className="h-full" />
+            </div>
+          </div>
         </section>
 
         {/* ── Grade Curricular ─────────────────────────────────────────────── */}

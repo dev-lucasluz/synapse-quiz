@@ -34,6 +34,10 @@ export async function GET() {
       email: user.email,
       referralCode: user.referralCode,
       plan: user.plan, // expõe o plano para o frontend
+      avatarUrl: user.avatarUrl,
+      college: user.college,
+      period: user.period,
+      targetSpecialty: user.targetSpecialty,
     },
     quota: {
       mainUsed: dailyUsage?.mainCardsReviewed ?? 0,

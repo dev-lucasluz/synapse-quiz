@@ -63,7 +63,7 @@ export const PLANS: Record<Plan, PlanConfig> = {
     id: "pro",
     name: "Pro",
     description: "Para quem quer dominar o internato e a residência",
-    priceMonthly: 29.9, // R$ 29,90/mês — ajuste conforme estratégia de pricing
+    priceMonthly: null, // Sem valor definido no momento
     features: {
       dailyQuotaBase: 9999,   // Ilimitado (usamos valor alto)
       dailyQuotaMax: 9999,

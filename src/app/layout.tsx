@@ -48,6 +48,10 @@ export default function RootLayout({
     } else {
       document.documentElement.classList.remove('dark');
     }
+    var collapsed = localStorage.getItem('synapse_sidebar_collapsed');
+    if (collapsed === 'true') {
+      document.documentElement.classList.add('sidebar-collapsed');
+    }
   } catch(e) {}
 })();
             `.trim(),

@@ -159,14 +159,16 @@ export default function PricingPage() {
               <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                 {PLANS.pro.description}
               </p>
-              <div className="mt-4 flex items-baseline">
-                <span className="text-3xl font-extrabold text-zinc-900 dark:text-zinc-50">
-                  R$ {PLANS.pro.priceMonthly?.toFixed(2).replace(".", ",")}
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="text-2xl font-extrabold text-zinc-900 sm:text-3xl dark:text-zinc-50">
+                  A definir
                 </span>
-                <span className="ml-1 text-xs text-zinc-400">/mês</span>
+                <span className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                  Em Breve
+                </span>
               </div>
               <p className="mt-0.5 text-[11px] text-zinc-400">
-                Cobrança recorrente • Cancele a qualquer momento
+                Valores e condições especiais serão divulgados no lançamento oficial
               </p>
             </div>
 
