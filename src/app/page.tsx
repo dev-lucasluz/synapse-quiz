@@ -162,9 +162,10 @@ export default async function HomePage() {
                 Banco de Questões Comentadas por Especialistas
               </h3>
               <p className="text-zinc-600 dark:text-zinc-200 text-sm leading-relaxed">
-                Mais de 600 questões criteriosamente selecionadas cobrindo as 5 grandes áreas da medicina:
-                Cirurgia Geral, Clínica Médica, Pediatria, Ginecologia e Obstetrícia, e Medicina Preventiva
-                e Social, com gabarito fundamentado item a item.
+                Mais de 600 questões criteriosamente selecionadas em 12 disciplinas do 1º ao 6º período,
+                do ciclo básico (Anatomia, Fisiologia, Bioquímica, Patologia...) ao clínico inicial
+                (Semiologia, Farmacologia Clínica, Saúde Coletiva, Diagnóstico por Imagem), com gabarito
+                fundamentado item a item.
               </p>
             </article>
 

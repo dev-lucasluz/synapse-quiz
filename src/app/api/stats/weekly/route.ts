@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  getStudyDayStringDaysAgo,
+  getTodayString,
+  getWeekdayOfDateString,
+  getYesterdayString,
+} from "@/lib/utils";
 
 /**
  * GET /api/stats/weekly
@@ -15,10 +21,8 @@ export async function GET() {
   const DAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
   for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split("T")[0];
-    const dayOfWeek = d.getDay();
+    const dateStr = getStudyDayStringDaysAgo(i);
+    const dayOfWeek = getWeekdayOfDateString(dateStr);
     days.push({
       date: dateStr,
       label: DAY_LABELS[dayOfWeek],
@@ -99,10 +103,8 @@ export async function GET() {
   });
 
   let streak = user?.streakCount || 0;
-  const today = new Date().toISOString().split("T")[0];
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const today = getTodayString();
+  const yesterdayStr = getYesterdayString();
 
   // If user hasn't studied today or yesterday, streak has expired
   if (user?.lastActiveDate !== today && user?.lastActiveDate !== yesterdayStr) {

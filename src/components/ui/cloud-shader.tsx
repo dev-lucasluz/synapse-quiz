@@ -18,6 +18,10 @@ export type CloudShaderProps = {
   skyBottomColor?: string;
 };
 
+// Escala de renderização do canvas (o CSS estica para tela cheia) e limite de FPS.
+const RENDER_SCALE = 0.5;
+const FRAME_INTERVAL_MS = 1000 / 30;
+
 const VERT = `
 attribute vec2 a_pos;
 varying vec2 v_uv;
@@ -299,7 +303,8 @@ export const CloudShader = ({
     ).matches;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Nuvens são suaves/borradas: renderizar em meia resolução custa ~4x menos GPU/CPU.
+      const dpr = RENDER_SCALE;
       const width = canvas.clientWidth;
       const height = canvas.clientHeight;
       const w = Math.max(1, Math.floor(width * dpr));
@@ -317,8 +322,13 @@ export const CloudShader = ({
     resize();
 
     const start = performance.now();
+    let lastDraw = 0;
     const draw = (now: number) => {
       if (!running) return;
+      frame = requestAnimationFrame(draw);
+      // Pausa com a aba oculta e limita a ~30 fps.
+      if (document.hidden || now - lastDraw < FRAME_INTERVAL_MS) return;
+      lastDraw = now;
       const p = paramsRef.current;
       const elapsed = reduceMotion ? 0 : ((now - start) / 1000) * p.speed;
       const cloud = parseHex(p.cloudColor);
@@ -331,7 +341,6 @@ export const CloudShader = ({
       gl.uniform3f(loc.skyTop, skyTop[0], skyTop[1], skyTop[2]);
       gl.uniform3f(loc.skyBottom, skyBottom[0], skyBottom[1], skyBottom[2]);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-      frame = requestAnimationFrame(draw);
     };
 
     frame = requestAnimationFrame(draw);

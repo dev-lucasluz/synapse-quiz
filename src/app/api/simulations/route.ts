@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getTodayString } from "@/lib/utils";
+import { getTodayString, getYesterdayString } from "@/lib/utils";
 
 /**
  * GET /api/simulations
@@ -75,17 +75,72 @@ export async function POST(request: Request) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
-  const body = await request.json();
-  const { title, subjectName, totalQuestions, durationSeconds, answers } = body;
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo da requisição inválido" }, { status: 400 });
+  }
+  const { title, subjectName, totalQuestions, durationSeconds, answers } = body as {
+    title?: unknown;
+    subjectName?: unknown;
+    totalQuestions?: unknown;
+    durationSeconds?: unknown;
+    answers?: unknown;
+  };
 
-  if (typeof totalQuestions !== "number" || !Array.isArray(answers) || answers.length === 0) {
+  if (
+    typeof totalQuestions !== "number" ||
+    !Number.isInteger(totalQuestions) ||
+    totalQuestions < 1 ||
+    totalQuestions > 100 ||
+    !Array.isArray(answers) ||
+    answers.length === 0 ||
+    answers.length > 100
+  ) {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
   }
 
+  // Sanitiza respostas: questionId string, selectedOption inteiro, sem duplicatas
+  const seen = new Set<string>();
+  const cleanAnswers: { questionId: string; selectedOption: number; timeSpentSeconds?: number }[] = [];
+  for (const raw of answers as unknown[]) {
+    const ans = raw as { questionId?: unknown; selectedOption?: unknown; timeSpentSeconds?: unknown };
+    if (
+      typeof ans?.questionId !== "string" ||
+      ans.questionId.length === 0 ||
+      ans.questionId.length > 100 ||
+      typeof ans.selectedOption !== "number" ||
+      !Number.isInteger(ans.selectedOption) ||
+      ans.selectedOption < 0 ||
+      ans.selectedOption > 10
+    ) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
+    if (seen.has(ans.questionId)) continue;
+    seen.add(ans.questionId);
+    cleanAnswers.push({
+      questionId: ans.questionId,
+      selectedOption: ans.selectedOption,
+      timeSpentSeconds:
+        typeof ans.timeSpentSeconds === "number" &&
+        Number.isFinite(ans.timeSpentSeconds) &&
+        ans.timeSpentSeconds >= 0 &&
+        ans.timeSpentSeconds <= 24 * 60 * 60
+          ? Math.round(ans.timeSpentSeconds)
+          : undefined,
+    });
+  }
+
+  const safeTitle = typeof title === "string" ? title.trim().slice(0, 120) : "";
+  const safeSubjectName = typeof subjectName === "string" ? subjectName.trim().slice(0, 120) : "";
+  const safeDuration =
+    typeof durationSeconds === "number" && Number.isFinite(durationSeconds) && durationSeconds >= 0
+      ? Math.min(Math.round(durationSeconds), 24 * 60 * 60)
+      : 0;
+
   // Validate answers server-side: fetch correct options from DB
-  const questionIds: string[] = answers.map(
-    (ans: { questionId: string }) => ans.questionId
-  );
+  const questionIds: string[] = cleanAnswers.map((ans) => ans.questionId);
 
   const dbQuestions = await prisma.question.findMany({
     where: { id: { in: questionIds } },
@@ -96,8 +151,10 @@ export async function POST(request: Request) {
   const explanationMap = new Map(dbQuestions.map((q) => [q.id, q.explanation]));
 
   // Compute verified results — never trust client-sent isCorrect
-  const verifiedAnswers = answers.map(
-    (ans: { questionId: string; selectedOption: number; timeSpentSeconds?: number }) => {
+  // Respostas para questões inexistentes são descartadas (evita erro de FK).
+  const verifiedAnswers = cleanAnswers
+    .filter((ans) => correctOptionMap.has(ans.questionId))
+    .map((ans) => {
       const correctOption = correctOptionMap.get(ans.questionId) ?? -1;
       return {
         questionId: ans.questionId,
@@ -106,19 +163,22 @@ export async function POST(request: Request) {
         timeSpentSeconds: ans.timeSpentSeconds ?? null,
         explanation: explanationMap.get(ans.questionId) ?? null,
       };
-    }
-  );
+    });
+
+  if (verifiedAnswers.length === 0) {
+    return NextResponse.json({ error: "Nenhuma questão válida encontrada" }, { status: 400 });
+  }
 
   const verifiedCorrectCount = verifiedAnswers.filter((a) => a.isCorrect).length;
 
   const simulation = await prisma.simulation.create({
     data: {
       userId: session.userId,
-      title: title || "Simulado Cronometrado",
-      subjectName: subjectName || "Simulado Geral",
-      totalQuestions,
+      title: safeTitle || "Simulado Cronometrado",
+      subjectName: safeSubjectName || "Simulado Geral",
+      totalQuestions: Math.max(totalQuestions, verifiedAnswers.length),
       correctCount: verifiedCorrectCount,
-      durationSeconds: durationSeconds || 0,
+      durationSeconds: safeDuration,
     },
   });
 
@@ -143,9 +203,7 @@ export async function POST(request: Request) {
 
   if (user) {
     let nextStreak = user.streakCount || 0;
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    const yesterdayStr = getYesterdayString();
 
     if (user.lastActiveDate === today) {
       // Streak already counted for today

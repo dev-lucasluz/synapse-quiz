@@ -8,7 +8,7 @@ interface DayData {
   notebook: number;
 }
 
-import { cn } from "@/lib/utils";
+import { cn, getTodayString } from "@/lib/utils";
 
 interface WeeklyChartProps {
   data: DayData[];
@@ -17,7 +17,7 @@ interface WeeklyChartProps {
 
 export function WeeklyChart({ data, className }: WeeklyChartProps) {
   const maxTotal = Math.max(...data.map((d) => d.total), 1);
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayString();
   const weekTotal = data.reduce((s, d) => s + d.total, 0);
 
   return (

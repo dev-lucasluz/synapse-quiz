@@ -58,3 +58,6 @@ next-env.d.ts
 
 # agents
 .agents/
+
+# claude code local config
+.claude/

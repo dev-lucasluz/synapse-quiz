@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getTodayString } from "@/lib/utils";
+import { getTodayString, getYesterdayString } from "@/lib/utils";
 import { calculateNextReview } from "@/lib/srs";
+import { getDailyQuota, type Plan } from "@/lib/billing";
 
 /**
  * POST /api/quiz/submit
  * Submit an answer, update SRS card, daily usage, return explanation.
+ *
+ * A cota diária é verificada aqui (servidor) — não basta o GET /api/quiz/daily,
+ * senão qualquer cliente poderia responder além do limite chamando a API direto.
  */
 export async function POST(request: Request) {
   const session = await getSession();
@@ -14,11 +18,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const { questionId, selectedOption, mode, timeSpentSeconds } = body;
-  // mode: "daily" | "notebook"
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo da requisição inválido" }, { status: 400 });
+  }
 
-  if (questionId === undefined || selectedOption === undefined) {
+  const { questionId, selectedOption, mode: rawMode, timeSpentSeconds } = (body ?? {}) as {
+    questionId?: unknown;
+    selectedOption?: unknown;
+    mode?: unknown;
+    timeSpentSeconds?: unknown;
+  };
+
+  // mode: "daily" | "notebook"
+  const mode: "daily" | "notebook" = rawMode === "notebook" ? "notebook" : "daily";
+
+  if (typeof questionId !== "string" || questionId.length === 0 || questionId.length > 100) {
+    return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+  }
+  if (typeof selectedOption !== "number" || !Number.isInteger(selectedOption)) {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
   }
 
@@ -29,6 +49,49 @@ export async function POST(request: Request) {
 
   if (!question) {
     return NextResponse.json({ error: "Questão não encontrada" }, { status: 404 });
+  }
+
+  const options = JSON.parse(question.options) as string[];
+  if (selectedOption < 0 || selectedOption >= options.length) {
+    return NextResponse.json({ error: "Alternativa inválida" }, { status: 400 });
+  }
+
+  const today = getTodayString();
+
+  // ── Cota diária (validada no servidor) ──────────────────────────────────────
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: {
+      plan: true,
+      streakCount: true,
+      lastActiveDate: true,
+      _count: { select: { referrals: true } },
+    },
+  });
+
+  if (!user) {
+    return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
+  }
+
+  const { mainMax, notebookMax } = getDailyQuota(user.plan as Plan, user._count.referrals);
+  const currentUsage = await prisma.dailyUsage.findUnique({
+    where: { userId_date: { userId: session.userId, date: today } },
+  });
+  const used =
+    mode === "notebook"
+      ? currentUsage?.notebookCardsReviewed ?? 0
+      : currentUsage?.mainCardsReviewed ?? 0;
+  const max = mode === "notebook" ? notebookMax : mainMax;
+
+  // Exceção: questões com imagem no modo "Questões com imagem" do quiz não
+  // travam na cota (mesma regra do GET /api/quiz/daily?filter=images).
+  const isImageQuestion = mode === "daily" && !!question.imageUrl;
+
+  if (used >= max && !isImageQuestion) {
+    return NextResponse.json(
+      { error: "Cota diária atingida", limitReached: true, used, max },
+      { status: 429 }
+    );
   }
 
   const correct = selectedOption === question.correctOption;
@@ -61,7 +124,6 @@ export async function POST(request: Request) {
   });
 
   // Update daily usage
-  const today = getTodayString();
   const usageUpdate =
     mode === "notebook"
       ? { notebookCardsReviewed: { increment: 1 } }
@@ -79,48 +141,46 @@ export async function POST(request: Request) {
   });
 
   // Record AnswerLog for high-fidelity analytics
-  const spentSeconds = typeof timeSpentSeconds === "number" ? timeSpentSeconds : null;
+  const spentSeconds =
+    typeof timeSpentSeconds === "number" &&
+    Number.isFinite(timeSpentSeconds) &&
+    timeSpentSeconds >= 0 &&
+    timeSpentSeconds <= 24 * 60 * 60
+      ? Math.round(timeSpentSeconds)
+      : null;
   await prisma.answerLog.create({
     data: {
       userId: session.userId,
       questionId,
       selectedOption,
       isCorrect: correct,
-      mode: mode || "daily",
+      mode,
       timeSpentSeconds: spentSeconds,
     },
   });
 
   // Update streak efficiently (O(1), zero N+1 loops)
-  const user = await prisma.user.findUnique({
-    where: { id: session.userId },
-    select: { streakCount: true, lastActiveDate: true },
-  });
+  // "Hoje" e "ontem" seguem o dia de estudo (vira às 05:00, horário de Brasília).
+  let nextStreak = user.streakCount || 0;
+  const yesterdayStr = getYesterdayString();
 
-  if (user) {
-    let nextStreak = user.streakCount || 0;
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split("T")[0];
-
-    if (user.lastActiveDate === today) {
-      // Already studied today - streak unchanged
-    } else if (user.lastActiveDate === yesterdayStr) {
-      // Studied yesterday - advance streak!
-      nextStreak += 1;
-    } else {
-      // First day or streak broken
-      nextStreak = 1;
-    }
-
-    await prisma.user.update({
-      where: { id: session.userId },
-      data: {
-        lastActiveDate: today,
-        streakCount: nextStreak,
-      },
-    });
+  if (user.lastActiveDate === today) {
+    // Already studied today - streak unchanged
+  } else if (user.lastActiveDate === yesterdayStr) {
+    // Studied yesterday - advance streak!
+    nextStreak += 1;
+  } else {
+    // First day or streak broken
+    nextStreak = 1;
   }
+
+  await prisma.user.update({
+    where: { id: session.userId },
+    data: {
+      lastActiveDate: today,
+      streakCount: nextStreak,
+    },
+  });
 
   // Auto-bookmark on wrong answer
   if (!correct) {
@@ -138,6 +198,6 @@ export async function POST(request: Request) {
     correctOption: question.correctOption,
     explanation: question.explanation,
     nextReviewIn: nextReview.intervalDays,
-    options: JSON.parse(question.options),
+    options,
   });
 }

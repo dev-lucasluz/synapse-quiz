@@ -7,9 +7,18 @@ import { useTheme } from "@/components/theme-provider";
 export function CloudBackground() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [showClouds, setShowClouds] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // Só inicia o WebGL depois do primeiro paint, para não bloquear o carregamento.
+    const start = () => setShowClouds(true);
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(start, { timeout: 1500 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(start, 300);
+    return () => window.clearTimeout(id);
   }, []);
 
   const isDark = mounted ? theme === "dark" : false;
@@ -24,14 +33,16 @@ export function CloudBackground() {
     >
       {/* Camada 1: Nuvens aceternity passando ao fundo com 50% de opacidade */}
       <div className="absolute inset-0 opacity-50">
-        <CloudShader
-          className="w-full h-full min-h-0"
-          speed={0.65}
-          count={5}
-          skyTopColor={isDark ? "#080813" : "#A0BDDB"}
-          skyBottomColor={isDark ? "#05050d" : "#8AAECB"}
-          cloudColor={isDark ? "#1c1c2e" : "#ffffff"}
-        />
+        {showClouds && (
+          <CloudShader
+            className="w-full h-full min-h-0"
+            speed={0.65}
+            count={5}
+            skyTopColor={isDark ? "#080813" : "#A0BDDB"}
+            skyBottomColor={isDark ? "#05050d" : "#8AAECB"}
+            cloudColor={isDark ? "#1c1c2e" : "#ffffff"}
+          />
+        )}
       </div>
 
       {/* Camada 2: Gradiente difuso e vinheta de iluminação das imagens de referência */}

@@ -113,7 +113,7 @@ function AuthContent() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-3 sm:p-6 lg:p-8 font-heading">
+    <main className="flex min-h-screen flex-col items-center justify-center p-3 sm:p-6 lg:p-8 font-heading">
       {/* Rótulo superior / Balão de branding */}
       <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60 select-none">
         <Brain size={14} className="text-amber-500 dark:text-amber-400" />
@@ -192,6 +192,7 @@ function AuthContent() {
                     <button
                       type="button"
                       onClick={() => setLoginShowPass(!loginShowPass)}
+                      aria-label={loginShowPass ? "Ocultar senha" : "Mostrar senha"}
                       className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
                       tabIndex={-1}
                     >
@@ -311,6 +312,7 @@ function AuthContent() {
                   <button
                     type="button"
                     onClick={() => setRegShowPass(!regShowPass)}
+                    aria-label={regShowPass ? "Ocultar senha" : "Mostrar senha"}
                     className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
                     tabIndex={-1}
                   >
@@ -439,7 +441,7 @@ function AuthContent() {
         </div>
 
       </div>
-    </div>
+    </main>
   );
 }
 
