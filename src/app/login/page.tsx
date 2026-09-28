@@ -213,6 +213,12 @@ function AuthContent() {
                   <label htmlFor="keepSignedIn" className="text-xs text-zinc-600 dark:text-zinc-400 cursor-pointer select-none">
                     Manter conectado
                   </label>
+                  <a
+                    href="/forgot-password"
+                    className="ml-auto text-xs font-semibold text-amber-700 hover:underline dark:text-amber-400"
+                  >
+                    Esqueci a senha
+                  </a>
                 </div>
 
                 {loginError && (

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getTodayString, getYesterdayString } from "@/lib/utils";
 import { calculateNextReview } from "@/lib/srs";
 import { getDailyQuota, type Plan } from "@/lib/billing";
+import { effectiveReferralCount, verifiedReferralsCount } from "@/lib/referrals";
 
 /**
  * POST /api/quiz/submit
@@ -65,7 +66,8 @@ export async function POST(request: Request) {
       plan: true,
       streakCount: true,
       lastActiveDate: true,
-      _count: { select: { referrals: true } },
+      emailVerifiedAt: true,
+      _count: verifiedReferralsCount,
     },
   });
 
@@ -73,7 +75,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
   }
 
-  const { mainMax, notebookMax } = getDailyQuota(user.plan as Plan, user._count.referrals);
+  const { mainMax, notebookMax } = getDailyQuota(user.plan as Plan, effectiveReferralCount(user));
   const currentUsage = await prisma.dailyUsage.findUnique({
     where: { userId_date: { userId: session.userId, date: today } },
   });

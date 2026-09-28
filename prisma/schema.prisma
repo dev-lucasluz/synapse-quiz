@@ -41,6 +41,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Preenchido quando o usuário confirma o e-mail. Só indicações verificadas rendem bônus de cota.
+  emailVerifiedAt DateTime?
+
   streakCount    Int      @default(0)
   lastActiveDate String?
 
@@ -52,6 +55,24 @@ model User {
   reports      QuestionReport[]
   answerLogs   AnswerLog[]
   simulations  Simulation[]
+  emailTokens  EmailToken[]
+}
+
+// Tokens de uso único enviados por e-mail (verificação e redefinição de senha).
+// Só o hash SHA-256 fica no banco; o token em si vai apenas no link do e-mail.
+model EmailToken {
+  id        String    @id @default(uuid())
+  userId    String
+  // "verify_email" | "reset_password"
+  type      String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, createdAt])
 }
 
 // ─── Subscription ─────────────────────────────────────────────────────────────

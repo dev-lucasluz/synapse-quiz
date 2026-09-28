@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getTodayString } from "@/lib/utils";
 import { getDailyQuota, type Plan } from "@/lib/billing";
+import { effectiveReferralCount, verifiedReferralsCount } from "@/lib/referrals";
 
 export async function GET() {
   const session = await getSession();
@@ -12,7 +13,7 @@ export async function GET() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    include: { referrals: true },
+    include: { _count: verifiedReferralsCount },
   });
 
   if (!user) {
@@ -24,7 +25,7 @@ export async function GET() {
     where: { userId_date: { userId: user.id, date: today } },
   });
 
-  const referralCount = user.referrals.length;
+  const referralCount = effectiveReferralCount(user);
   const { mainMax, notebookMax } = getDailyQuota(user.plan as Plan, referralCount);
 
   return NextResponse.json({
@@ -34,6 +35,7 @@ export async function GET() {
       email: user.email,
       referralCode: user.referralCode,
       plan: user.plan, // expõe o plano para o frontend
+      emailVerified: !!user.emailVerifiedAt,
       avatarUrl: user.avatarUrl,
       college: user.college,
       period: user.period,

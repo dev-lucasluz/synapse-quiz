@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getTodayString } from "@/lib/utils";
 import { getDailyQuota, canAccessQuestion, type Plan } from "@/lib/billing";
+import { effectiveReferralCount, verifiedReferralsCount } from "@/lib/referrals";
 
 export async function GET(request: Request) {
   const session = await getSession();
@@ -24,14 +25,14 @@ export async function GET(request: Request) {
 
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    include: { referrals: true },
+    include: { _count: verifiedReferralsCount },
   });
 
   if (!user) {
     return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
   }
 
-  const referralCount = user.referrals.length;
+  const referralCount = effectiveReferralCount(user);
   const { mainMax } = getDailyQuota(user.plan as Plan, referralCount);
 
   const dailyUsage = await prisma.dailyUsage.findUnique({

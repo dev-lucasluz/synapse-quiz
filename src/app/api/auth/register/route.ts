@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { createSession, setSessionCookie } from "@/lib/auth";
 import { generateReferralCode } from "@/lib/utils";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { issueEmailToken } from "@/lib/email-tokens";
+import { sendVerificationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   // Rate limit: 5 registrations per hour per IP
@@ -65,19 +67,15 @@ export async function POST(request: Request) {
     }
 
     // Resolve referrer
+    // O limite de bônus (2 indicações) é aplicado no cálculo da cota, e só indicações
+    // com e-mail verificado contam — veja lib/referrals.ts.
     let referredById: string | null = null;
-    if (referralCode) {
+    if (typeof referralCode === "string" && referralCode.length > 0 && referralCode.length <= 50) {
       const referrer = await prisma.user.findUnique({
         where: { referralCode },
-        include: { referrals: true },
+        select: { id: true },
       });
-      if (referrer) {
-        // Antifraude: max 2 referrals counted
-        const confirmedReferrals = referrer.referrals.length;
-        if (confirmedReferrals < 2) {
-          referredById = referrer.id;
-        }
-      }
+      if (referrer) referredById = referrer.id;
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -112,8 +110,17 @@ export async function POST(request: Request) {
 
     await setSessionCookie(token);
 
+    // Envia o link de verificação; falha no envio não impede o cadastro
+    // (o usuário pode reenviar pelo painel).
+    let verificationSent = false;
+    const verifyToken = await issueEmailToken(user.id, "verify_email");
+    if (verifyToken) {
+      verificationSent = await sendVerificationEmail(user.email, user.name, verifyToken);
+    }
+
     return NextResponse.json({
       user: { id: user.id, name: user.name, email: user.email },
+      verificationSent,
     });
   } catch (error) {
     console.error("Register error:", error);

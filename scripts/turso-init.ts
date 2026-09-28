@@ -205,6 +205,29 @@ async function main() {
       // Ignora se a coluna já existir no banco
     }
   }
+
+  // Verificação de e-mail: coluna nova + tabela de tokens.
+  // O backfill roda SOMENTE quando a coluna acaba de ser criada, para as contas que já
+  // existiam ficarem verificadas (não perdem bônus de indicação) sem "verificar" contas novas.
+  await client.execute(`CREATE TABLE IF NOT EXISTS "EmailToken" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "tokenHash" TEXT NOT NULL,
+    "expiresAt" DATETIME NOT NULL,
+    "usedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "EmailToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  );`);
+  await client.execute(`CREATE UNIQUE INDEX IF NOT EXISTS "EmailToken_tokenHash_key" ON "EmailToken"("tokenHash");`);
+  await client.execute(`CREATE INDEX IF NOT EXISTS "EmailToken_userId_type_createdAt_idx" ON "EmailToken"("userId", "type", "createdAt");`);
+  try {
+    await client.execute(`ALTER TABLE "User" ADD COLUMN "emailVerifiedAt" DATETIME;`);
+    await client.execute(`UPDATE "User" SET "emailVerifiedAt" = "createdAt" WHERE "emailVerifiedAt" IS NULL;`);
+    console.log("✅ [Turso] Coluna emailVerifiedAt criada; contas existentes marcadas como verificadas.");
+  } catch {
+    // Coluna já existe: nada a fazer (e o backfill nunca roda de novo)
+  }
   console.log("✅ [Turso] Tabelas e índices criados/atualizados com sucesso.");
 
   const adapter = new PrismaLibSql({ url, authToken });

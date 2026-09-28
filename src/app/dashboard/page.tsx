@@ -17,6 +17,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
+import { EmailVerifyBanner } from "@/components/email-verify-banner";
 import { cn } from "@/lib/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -27,6 +28,7 @@ interface UserData {
     email: string;
     referralCode: string;
     plan: string;
+    emailVerified?: boolean;
     avatarUrl?: string | null;
     college?: string | null;
     period?: string | null;
@@ -254,6 +256,8 @@ export default function DashboardPage() {
       />
 
       <main className="mx-auto max-w-5xl px-4 py-10">
+
+        {user.emailVerified === false && <EmailVerifyBanner className="mb-6" />}
 
         {/* ── Cabeçalho Clínico ────────────────────────────────────────────── */}
         <header className="mb-8 flex items-start justify-between">

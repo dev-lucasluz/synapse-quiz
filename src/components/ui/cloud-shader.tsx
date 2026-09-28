@@ -264,6 +264,12 @@ export const CloudShader = ({
     });
     if (!gl) return;
 
+    // Sem GPU (SwiftShader/llvmpipe, headless, VMs) o shader roda na CPU e trava a
+    // thread principal. Nesse caso mantém só o fundo em CSS.
+    const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+    const renderer = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : "";
+    if (/swiftshader|llvmpipe|software|basic render/i.test(renderer)) return;
+
     const vert = compile(gl, gl.VERTEX_SHADER, VERT);
     const frag = compile(gl, gl.FRAGMENT_SHADER, FRAG);
     if (!vert || !frag) return;
