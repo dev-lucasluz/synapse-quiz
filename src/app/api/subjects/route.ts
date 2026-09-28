@@ -19,7 +19,7 @@ export async function GET() {
         distinct: ["subtopic"],
       },
     },
-    orderBy: [{ period: "asc" }, { name: "asc" }],
+    orderBy: [{ name: "asc" }],
   });
 
   // Get user's reviewed question counts per subject

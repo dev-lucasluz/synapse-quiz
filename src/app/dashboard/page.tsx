@@ -264,7 +264,7 @@ export default function DashboardPage() {
             <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
               Acompanhamento diário de repetição espaçada e retenção clínica
               <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">•</span>
-              1º ao 6º Período
+              Matérias e Especialidades Médicas
             </p>
           </div>
           <button

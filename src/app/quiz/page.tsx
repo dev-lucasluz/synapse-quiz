@@ -184,9 +184,6 @@ function QuizContent() {
     );
   }
 
-  // Agrupar matérias por período para o select
-  const periods = [1, 2, 3, 4, 5, 6];
-
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
       <Navbar userName={meData?.user.name} plan={meData?.user.plan} />
@@ -228,19 +225,13 @@ function QuizContent() {
                 className="w-full appearance-none rounded-lg border border-zinc-200 bg-zinc-50/70 py-2 pl-3 pr-8 text-xs font-medium text-zinc-800 shadow-2xs outline-none transition-colors focus:border-amber-500 focus:bg-white focus:ring-1 focus:ring-amber-500/20 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:focus:bg-zinc-800"
               >
                 <option value="">📚 Todas as Matérias (Misto Geral)</option>
-                {periods.map((p) => {
-                  const pSubjects = subjects.filter((s) => s.period === p);
-                  if (pSubjects.length === 0) return null;
-                  return (
-                    <optgroup key={p} label={`${p}º Período`}>
-                      {pSubjects.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name} ({s.totalQuestions} questões)
-                        </option>
-                      ))}
-                    </optgroup>
-                  );
-                })}
+                {[...subjects]
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} ({s.totalQuestions} questões)
+                    </option>
+                  ))}
               </select>
               <ChevronDown
                 size={13}

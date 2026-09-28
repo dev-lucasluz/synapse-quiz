@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 interface Subject {
   id: string;
   name: string;
-  period: number;
+  period?: number;
   category: string;
   totalQuestions: number;
   reviewedQuestions: number;
@@ -17,37 +17,26 @@ interface CurricularGridProps {
   subjects: Subject[];
 }
 
-type CycleFilter = "all" | "basic" | "defense" | "clinical";
-
-const CYCLE_FILTERS: { id: CycleFilter; label: string; periods: number[] }[] = [
-  { id: "all", label: "Todos os períodos", periods: [1, 2, 3, 4, 5, 6] },
-  { id: "basic", label: "Ciclo Básico (1º–2º)", periods: [1, 2] },
-  { id: "defense", label: "Agressão & Defesa (3º–4º)", periods: [3, 4] },
-  { id: "clinical", label: "Ciclo Clínico (5º–6º)", periods: [5, 6] },
-];
-
-const PERIOD_COLORS: Record<number, { dot: string; text: string }> = {
-  1: { dot: "bg-violet-500", text: "text-violet-700 dark:text-violet-400" },
-  2: { dot: "bg-blue-500",   text: "text-blue-700 dark:text-blue-400" },
-  3: { dot: "bg-amber-500",  text: "text-amber-700 dark:text-amber-400" },
-  4: { dot: "bg-rose-500",   text: "text-rose-700 dark:text-rose-400" },
-  5: { dot: "bg-orange-500", text: "text-orange-700 dark:text-orange-400" },
-  6: { dot: "bg-emerald-600", text: "text-emerald-700 dark:text-emerald-400" },
+const CATEGORY_COLORS: Record<string, { dot: string; text: string }> = {
+  "Ciclo Básico": { dot: "bg-blue-500", text: "text-blue-700 dark:text-blue-400" },
+  "Ciclo Clínico Inicial": { dot: "bg-orange-500", text: "text-orange-700 dark:text-orange-400" },
+  "Ciclo Clínico": { dot: "bg-orange-500", text: "text-orange-700 dark:text-orange-400" },
+  "Internato": { dot: "bg-emerald-500", text: "text-emerald-700 dark:text-emerald-400" },
 };
 
 function SubjectCard({ subject }: { subject: Subject }) {
   const pct = subject.totalQuestions > 0
     ? Math.round((subject.reviewedQuestions / subject.totalQuestions) * 100)
     : 0;
-  const colors = PERIOD_COLORS[subject.period] ?? { dot: "bg-zinc-400", text: "text-zinc-600" };
+  const colors = CATEGORY_COLORS[subject.category] ?? { dot: "bg-amber-500", text: "text-amber-700 dark:text-amber-400" };
 
   return (
     <div className="group flex flex-col rounded-xl border border-zinc-200 bg-white p-4.5 shadow-xs transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
-      {/* Period badge */}
+      {/* Category badge */}
       <div className="mb-2.5 flex items-center gap-2">
         <span className={cn("h-2 w-2 rounded-full shrink-0", colors.dot)} />
         <span className={cn("text-[11px] font-semibold uppercase tracking-wider", colors.text)}>
-          {subject.period}º Período
+          {subject.category || "Matéria Médica"}
         </span>
       </div>
 
@@ -93,27 +82,36 @@ function SubjectCard({ subject }: { subject: Subject }) {
 }
 
 export function CurricularGrid({ subjects }: CurricularGridProps) {
-  const [activeFilter, setActiveFilter] = useState<CycleFilter>("all");
+  const [activeCategory, setActiveCategory] = useState<string>("all");
 
-  const activeConfig = CYCLE_FILTERS.find((f) => f.id === activeFilter)!;
-  const filtered = subjects.filter((s) => activeConfig.periods.includes(s.period));
+  const categories = [
+    { id: "all", label: "Todas as Matérias" },
+    ...Array.from(new Set(subjects.map((s) => s.category).filter(Boolean))).map((cat) => ({
+      id: cat,
+      label: cat,
+    })),
+  ];
+
+  const filtered = activeCategory === "all"
+    ? subjects
+    : subjects.filter((s) => s.category === activeCategory);
 
   return (
     <div>
       {/* Filter tabs */}
       <div className="mb-4 flex flex-wrap gap-2">
-        {CYCLE_FILTERS.map((filter) => (
+        {categories.map((cat) => (
           <button
-            key={filter.id}
-            onClick={() => setActiveFilter(filter.id)}
+            key={cat.id}
+            onClick={() => setActiveCategory(cat.id)}
             className={cn(
               "rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors",
-              activeFilter === filter.id
+              activeCategory === cat.id
                 ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
                 : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:text-zinc-200"
             )}
           >
-            {filter.label}
+            {cat.label}
           </button>
         ))}
       </div>
@@ -122,7 +120,7 @@ export function CurricularGrid({ subjects }: CurricularGridProps) {
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center rounded-xl border border-dashed border-zinc-200 bg-white py-12 text-center shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
           <BookOpen size={22} className="mb-2 text-zinc-400 dark:text-zinc-500" />
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">Nenhuma matéria encontrada neste ciclo</p>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">Nenhuma matéria encontrada nesta categoria</p>
         </div>
       ) : (
         <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">

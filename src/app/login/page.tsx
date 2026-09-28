@@ -118,7 +118,7 @@ function AuthContent() {
       <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60 select-none">
         <Brain size={14} className="text-amber-500 dark:text-amber-400" />
         <span className="text-xs font-bold tracking-wider text-zinc-800 dark:text-zinc-200">
-          SINAPSE QUIZ
+          SYNAPSE QUIZ
         </span>
         <span className="text-[10px] text-zinc-400">•</span>
         <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
@@ -233,7 +233,7 @@ function AuthContent() {
                 {/* Link Criar Conta */}
                 <div className="pt-1 text-center">
                   <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                    Novo no Sinapse?{" "}
+                    Novo no Synapse?{" "}
                     <button
                       type="button"
                       onClick={() => setMode("signup")}
@@ -390,7 +390,7 @@ function AuthContent() {
 
             <div>
               <h3 className="font-brand text-xl md:text-2xl lg:text-3xl font-extrabold tracking-[0.1em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
-                SINAPSE QUIZ
+                SYNAPSE QUIZ
               </h3>
             </div>
 

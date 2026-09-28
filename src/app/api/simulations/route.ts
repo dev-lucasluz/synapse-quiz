@@ -115,7 +115,7 @@ export async function POST(request: Request) {
     data: {
       userId: session.userId,
       title: title || "Simulado Cronometrado",
-      subjectName: subjectName || "Geral (Todos os Períodos)",
+      subjectName: subjectName || "Simulado Geral",
       totalQuestions,
       correctCount: verifiedCorrectCount,
       durationSeconds: durationSeconds || 0,

@@ -3,7 +3,7 @@ import { Brain, ArrowLeft, Home, LayoutDashboard } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[#030712] text-zinc-100 flex flex-col justify-between p-6">
+    <div className="not-found-page min-h-screen text-zinc-100 flex flex-col justify-between p-6">
       <header className="max-w-4xl mx-auto w-full pt-8 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-xl bg-black border border-zinc-800 flex items-center justify-center text-amber-400 shadow-xs">

@@ -360,12 +360,14 @@ export default function SimulationPage() {
                 onChange={(e) => setSelectedSubjectId(e.target.value)}
                 className="w-full rounded-xl border border-zinc-200 bg-white p-3 text-xs font-semibold text-zinc-800 outline-none focus:border-amber-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 sm:text-sm"
               >
-                <option value="">📚 Simulado Geral (Misto - Todos os Períodos)</option>
-                {subjects.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name} ({s.period}º Período - {s.totalQuestions} questões)
-                  </option>
-                ))}
+                <option value="">📚 Simulado Geral (Misto - Todas as Matérias)</option>
+                {[...subjects]
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} ({s.totalQuestions} questões)
+                    </option>
+                  ))}
               </select>
             </div>
 

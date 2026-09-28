@@ -35,7 +35,7 @@ export const MEDICAL_AVATARS: MedicalAvatar[] = [
   },
   {
     id: "avatar:brain",
-    label: "Neuro & Sinapse",
+    label: "Neuro & Synapse",
     icon: Brain,
     bgColor: "bg-indigo-600 dark:bg-indigo-500",
     iconColor: "text-white",

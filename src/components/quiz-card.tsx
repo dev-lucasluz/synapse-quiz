@@ -313,9 +313,11 @@ export function QuizCard({
             <Clock size={12} className="text-zinc-400" />
             {question.year}
           </span>
-          <span className="flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 font-medium text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/70 dark:text-amber-300">
-            {question.period}º Período
-          </span>
+          {question.subtopic && (
+            <span className="flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 font-medium text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/70 dark:text-amber-300">
+              {question.subtopic}
+            </span>
+          )}
         </div>
 
         {/* Botão de Reportar Questão */}
