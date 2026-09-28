@@ -6,6 +6,7 @@ import { generateReferralCode } from "@/lib/utils";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { issueEmailToken } from "@/lib/email-tokens";
 import { sendVerificationEmail } from "@/lib/email";
+import { canonicalEmail, normalizeEmail } from "@/lib/email-address";
 
 export async function POST(request: Request) {
   // Rate limit: 5 registrations per hour per IP
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const trimmedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const trimmedEmail = typeof email === "string" ? normalizeEmail(email) : "";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (trimmedEmail.length > 254 || !emailRegex.test(trimmedEmail)) {
       return NextResponse.json(
@@ -57,8 +58,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if user already exists
-    const existing = await prisma.user.findUnique({ where: { email: trimmedEmail } });
+    // Check if user already exists. Para Gmail, "no.me+x@gmail.com" e "nome@gmail.com" são a
+    // mesma caixa de entrada, então comparamos também pela forma canônica.
+    const emailCanonicalValue = canonicalEmail(trimmedEmail);
+    const existing = await prisma.user.findFirst({
+      where: { OR: [{ email: trimmedEmail }, { emailCanonical: emailCanonicalValue }] },
+      select: { id: true },
+    });
     if (existing) {
       return NextResponse.json(
         { error: "E-mail já cadastrado" },
@@ -96,6 +102,7 @@ export async function POST(request: Request) {
       data: {
         name: trimmedName,
         email: trimmedEmail,
+        emailCanonical: emailCanonicalValue,
         passwordHash,
         referralCode: newReferralCode,
         referredById,
@@ -123,6 +130,10 @@ export async function POST(request: Request) {
       verificationSent,
     });
   } catch (error) {
+    // Corrida entre dois cadastros simultâneos: o índice único barra o segundo.
+    if ((error as { code?: string })?.code === "P2002") {
+      return NextResponse.json({ error: "E-mail já cadastrado" }, { status: 409 });
+    }
     console.error("Register error:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }

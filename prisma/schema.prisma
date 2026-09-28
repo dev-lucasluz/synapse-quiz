@@ -16,6 +16,8 @@ model User {
   id           String  @id @default(uuid())
   name         String
   email        String  @unique
+  // Forma canônica do e-mail (Gmail sem pontos e sem +tag) para impedir contas duplicadas.
+  emailCanonical String? @unique
   passwordHash String
   referralCode String  @unique
   referredById String?

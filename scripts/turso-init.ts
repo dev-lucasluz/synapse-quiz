@@ -4,6 +4,7 @@ import { PrismaLibSql } from "@prisma/adapter-libsql";
 import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
+import { migrateEmailCanonical } from "./email-canonical-migration";
 
 const DDL_STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS "User" (
@@ -228,6 +229,7 @@ async function main() {
   } catch {
     // Coluna já existe: nada a fazer (e o backfill nunca roda de novo)
   }
+  await migrateEmailCanonical(client);
   console.log("✅ [Turso] Tabelas e índices criados/atualizados com sucesso.");
 
   const adapter = new PrismaLibSql({ url, authToken });

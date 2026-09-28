@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSession, setSessionCookie } from "@/lib/auth";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { normalizeEmail } from "@/lib/email-address";
 
 export async function POST(request: Request) {
   // Rate limit: 5 attempts per 15 minutes per IP
@@ -23,14 +24,16 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    if (!email || !password) {
+    if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
       return NextResponse.json(
         { error: "Email e senha são obrigatórios" },
         { status: 400 }
       );
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    // O cadastro grava o e-mail em minúsculas; o login precisa procurar do mesmo jeito
+    // (teclados de celular costumam capitalizar a primeira letra).
+    const user = await prisma.user.findUnique({ where: { email: normalizeEmail(email) } });
     if (!user) {
       return NextResponse.json(
         { error: "Credenciais inválidas" },

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/toaster";
+import { getImageCredit } from "@/lib/image-credits";
 import {
   CheckCircle2,
   XCircle,
@@ -344,8 +345,8 @@ export function QuizCard({
           <img
             src={question.imageUrl}
             alt="Imagem clínica / lâmina"
-            className="w-full cursor-zoom-in object-cover transition-opacity hover:opacity-95"
-            style={{ maxHeight: 280 }}
+            className="w-full cursor-zoom-in object-contain transition-opacity hover:opacity-95"
+            style={{ maxHeight: 320 }}
             onClick={() => setImageZoomed(true)}
           />
           <button
@@ -354,6 +355,14 @@ export function QuizCard({
           >
             <ZoomIn size={13} /> Ampliar
           </button>
+          {getImageCredit(question.imageUrl) && (
+            <p className="border-t border-zinc-200 bg-white/70 px-3 py-1 text-[10px] text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-400">
+              Imagem: {getImageCredit(question.imageUrl)!.author} · {getImageCredit(question.imageUrl)!.license} ·{" "}
+              <a href="/creditos" className="underline">
+                créditos
+              </a>
+            </p>
+          )}
         </div>
       )}
 

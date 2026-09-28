@@ -228,7 +228,10 @@ export default async function HomePage() {
         <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} Synapse Quiz. Todos os direitos reservados.</p>
           <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
-            Plataforma Médica & Preparação para Residência (ENARE / R1 / R3)
+            Plataforma Médica & Preparação para Residência (ENARE / R1 / R3) ·{" "}
+            <a href="/creditos" className="underline hover:text-zinc-600 dark:hover:text-zinc-300">
+              Créditos das imagens
+            </a>
           </p>
         </div>
       </footer>

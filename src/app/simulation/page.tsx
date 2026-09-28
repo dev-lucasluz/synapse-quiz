@@ -535,8 +535,8 @@ export default function SimulationPage() {
                 <img
                   src={currentQ.imageUrl}
                   alt="Imagem da questão"
-                  className="w-full cursor-zoom-in object-cover"
-                  style={{ maxHeight: 260 }}
+                  className="w-full cursor-zoom-in object-contain"
+                  style={{ maxHeight: 300 }}
                   onClick={() => setZoomedImage(currentQ.imageUrl!)}
                 />
                 <button

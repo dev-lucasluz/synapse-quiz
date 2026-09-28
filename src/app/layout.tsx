@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Geist } from "next/font/google";
+import { Inter, Geist, Plus_Jakarta_Sans, Playfair_Display, Tourney } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CloudBackground } from "@/components/cloud-background";
@@ -8,6 +8,18 @@ import { cn } from "@/lib/utils";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const inter = Inter({ subsets: ["latin"] });
+
+// Fontes hospedadas junto com o site (sem requisição bloqueante ao Google Fonts).
+// Playfair e Tourney são usadas em poucos lugares: não precisam de preload.
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
+  preload: false,
+});
+const tourney = Tourney({ subsets: ["latin"], variable: "--font-tourney", display: "swap", preload: false });
 
 export const viewport: Viewport = {
   themeColor: "#ea580c",
@@ -36,14 +48,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+    <html lang="pt-BR" suppressHydrationWarning className={cn("font-sans", geist.variable, jakarta.variable, playfair.variable, tourney.variable)}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Tourney:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
