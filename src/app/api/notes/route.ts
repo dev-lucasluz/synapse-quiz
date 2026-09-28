@@ -30,8 +30,15 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { questionId, content } = body;
 
-  if (!questionId || typeof content !== "string") {
+  if (!questionId || typeof questionId !== "string" || questionId.length > 100 || typeof content !== "string") {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+  }
+
+  if (content.length > 5000) {
+    return NextResponse.json(
+      { error: "A anotação deve ter no máximo 5.000 caracteres." },
+      { status: 400 }
+    );
   }
 
   const trimmed = content.trim();

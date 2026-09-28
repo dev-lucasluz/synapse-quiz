@@ -79,7 +79,7 @@ export function AvatarPicker({
         {/* Cabeçalho do modal */}
         <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-100 text-teal-700 dark:bg-teal-950 dark:text-teal-400">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-orange-700 dark:bg-amber-950 dark:text-amber-400">
               <Camera size={16} />
             </div>
             <div>
@@ -111,7 +111,7 @@ export function AvatarPicker({
                 : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
             )}
           >
-            <Sparkles size={13} className="text-teal-600 dark:text-teal-400" />
+            <Sparkles size={13} className="text-orange-600 dark:text-amber-400" />
             <span>Avatares Médicos</span>
           </button>
           <button
@@ -124,7 +124,7 @@ export function AvatarPicker({
                 : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
             )}
           >
-            <Upload size={13} className="text-teal-600 dark:text-teal-400" />
+            <Upload size={13} className="text-orange-600 dark:text-amber-400" />
             <span>Enviar Foto</span>
           </button>
         </div>
@@ -147,7 +147,7 @@ export function AvatarPicker({
                     className={cn(
                       "group relative flex flex-col items-center gap-1.5 rounded-xl border p-2 transition-all hover:scale-105",
                       isSelected
-                        ? "border-teal-500 bg-teal-50/70 ring-2 ring-teal-500/20 dark:border-teal-400 dark:bg-teal-950/40"
+                        ? "border-amber-500 bg-amber-50/70 ring-2 ring-amber-500/20 dark:border-amber-400 dark:bg-amber-950/40"
                         : "border-zinc-200/80 bg-white hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-800/60 dark:hover:border-zinc-700"
                     )}
                   >
@@ -163,7 +163,7 @@ export function AvatarPicker({
                       {avatar.label}
                     </span>
                     {isSelected && (
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-teal-600 text-white shadow-2xs">
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-orange-600 text-white shadow-2xs">
                         <Check size={10} />
                       </span>
                     )}
@@ -228,7 +228,7 @@ export function AvatarPicker({
                 <button
                   type="button"
                   onClick={handleConfirmCustom}
-                  className="flex items-center justify-center gap-1.5 rounded-xl bg-teal-700 px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-500"
+                  className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-orange-950/20 transition-all"
                 >
                   <Check size={14} />
                   <span>Aplicar</span>

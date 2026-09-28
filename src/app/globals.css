@@ -1,18 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Tourney:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/*
- * Tailwind v4 class-based dark mode selector
- */
+@custom-variant dark (&:is(.dark *));
 @variant dark (&:where(.dark, .dark *));
+
+.font-elegant {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-brand {
+  font-family: 'Tourney', sans-serif;
+}
+
+.font-tourney {
+  font-family: 'Tourney', sans-serif;
+}
+
+.font-abril {
+  font-family: 'Abril Fatface', Georgia, serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+.font-heading {
+  font-family: 'Plus Jakarta Sans', var(--font-sans), sans-serif;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+/* ── Theme Background Colors ─────────────────────────────────────────────── */
+:root {
+  --bg-light: #A0BDDB;   /* Frozen (RGB 160, 189, 219) */
+  --bg-dark:  #080813;   /* Black Iris (RGB 8, 8, 19) */
+  --background: #A0BDDB;
+  --foreground: oklch(0.145 0 0);
+  --card: rgba(255, 255, 255, 0.85);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: rgba(255, 255, 255, 0.90);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #ea580c;
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: #080813;
+  --foreground: oklch(0.985 0 0);
+  --card: rgba(14, 14, 28, 0.85);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: rgba(14, 14, 28, 0.90);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: #f97316;
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.80 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
 }
 
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-light) !important;
+  background-attachment: fixed;
+  transition: background-color 0.3s ease;
+}
+
+.dark body {
+  background-color: var(--bg-dark) !important;
+}
+
+/* Page wrapper divs are transparent so cloud shader and background color show through */
+div.min-h-screen {
+  background-color: transparent !important;
+}
+
+/* Frosted glass applied specifically to main cards and sidebar panels (not buttons or inputs) */
+div.rounded-xl.bg-white,
+div.rounded-2xl.bg-white,
+aside.bg-white {
+  background-color: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+}
+
+.dark div.rounded-xl.dark\:bg-zinc-900,
+.dark div.rounded-2xl.dark\:bg-zinc-900,
+.dark aside.dark\:bg-zinc-900 {
+  background-color: rgba(14, 14, 28, 0.85);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* High contrast text improvements for dark mode across the entire app */
+.dark .text-zinc-600 {
+  color: #d4d4d8 !important; /* zinc-300 */
+}
+
+.dark .text-zinc-500 {
+  color: #d4d4d8 !important; /* zinc-300 */
+}
+
+.dark .text-zinc-400 {
+  color: #e4e4e7 !important; /* zinc-200 */
 }
 
 /* ── Sidebar Layout Offsets ───────────────────────────────────────────────── */

@@ -59,17 +59,9 @@ export async function PATCH(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { name, college, period, targetSpecialty, avatarUrl, plan } = body;
-
-    // Validação de plano
-    if (plan !== undefined) {
-      if (plan !== "free" && plan !== "pro") {
-        return NextResponse.json(
-          { error: "Plano inválido. Escolha 'free' ou 'pro'." },
-          { status: 400 }
-        );
-      }
-    }
+    // NOTE: `plan` is intentionally excluded — plan changes require a payment flow,
+    // not a direct API call from the client.
+    const { name, college, period, targetSpecialty, avatarUrl } = body;
 
     // Validação de nome
     if (name !== undefined) {
@@ -101,11 +93,18 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    // Validação de tamanho de imagem/avatarUrl (máx ~150KB)
-    if (avatarUrl !== undefined && avatarUrl !== null) {
-      if (typeof avatarUrl !== "string" || avatarUrl.length > 200000) {
+    // Validação de formato e tamanho de imagem/avatarUrl (máx ~150KB em base64)
+    if (avatarUrl !== undefined && avatarUrl !== null && avatarUrl.trim() !== "") {
+      const trimmedAvatar = avatarUrl.trim();
+      const isValidScheme =
+        trimmedAvatar.startsWith("avatar:") ||
+        trimmedAvatar.startsWith("data:image/") ||
+        trimmedAvatar.startsWith("https://") ||
+        trimmedAvatar.startsWith("http://");
+
+      if (!isValidScheme || trimmedAvatar.length > 200000) {
         return NextResponse.json(
-          { error: "A imagem selecionada é muito grande. Escolha uma imagem menor." },
+          { error: "Formato ou tamanho de imagem de perfil inválido." },
           { status: 400 }
         );
       }
@@ -119,7 +118,6 @@ export async function PATCH(req: NextRequest) {
         ...(period !== undefined && { period: period ? period.trim() : null }),
         ...(targetSpecialty !== undefined && { targetSpecialty: targetSpecialty ? targetSpecialty.trim() : null }),
         ...(avatarUrl !== undefined && { avatarUrl: avatarUrl ? avatarUrl.trim() : null }),
-        ...(plan !== undefined && { plan }),
       },
       select: {
         id: true,

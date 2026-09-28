@@ -6,6 +6,8 @@ import { getTodayString } from "@/lib/utils";
 /**
  * GET /api/simulations
  * Pro-only: Generates a randomized exam simulation questions set.
+ * NOTE: correctOption and explanation are intentionally omitted from this response
+ * to prevent clients from reading answers before submitting.
  */
 export async function GET(request: Request) {
   const session = await getSession();
@@ -44,13 +46,13 @@ export async function GET(request: Request) {
   const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
   const selected = shuffled.slice(0, count);
 
+  // correctOption and explanation are intentionally excluded — answers are
+  // validated server-side in POST /api/simulations after submission.
   const formattedQuestions = selected.map((q) => ({
     id: q.id,
     text: q.text,
     imageUrl: q.imageUrl,
     options: JSON.parse(q.options) as string[],
-    correctOption: q.correctOption,
-    explanation: q.explanation,
     source: q.source,
     year: q.year,
     subject: q.subject.name,
@@ -67,17 +69,47 @@ export async function GET(request: Request) {
 /**
  * POST /api/simulations
  * Pro-only: Saves finished simulation and records AnswerLogs.
+ * correctCount and isCorrect are computed server-side from DB — client values are ignored.
  */
 export async function POST(request: Request) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const body = await request.json();
-  const { title, subjectName, totalQuestions, correctCount, durationSeconds, answers } = body;
+  const { title, subjectName, totalQuestions, durationSeconds, answers } = body;
 
-  if (typeof totalQuestions !== "number" || typeof correctCount !== "number") {
+  if (typeof totalQuestions !== "number" || !Array.isArray(answers) || answers.length === 0) {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
   }
+
+  // Validate answers server-side: fetch correct options from DB
+  const questionIds: string[] = answers.map(
+    (ans: { questionId: string }) => ans.questionId
+  );
+
+  const dbQuestions = await prisma.question.findMany({
+    where: { id: { in: questionIds } },
+    select: { id: true, correctOption: true, explanation: true },
+  });
+
+  const correctOptionMap = new Map(dbQuestions.map((q) => [q.id, q.correctOption]));
+  const explanationMap = new Map(dbQuestions.map((q) => [q.id, q.explanation]));
+
+  // Compute verified results — never trust client-sent isCorrect
+  const verifiedAnswers = answers.map(
+    (ans: { questionId: string; selectedOption: number; timeSpentSeconds?: number }) => {
+      const correctOption = correctOptionMap.get(ans.questionId) ?? -1;
+      return {
+        questionId: ans.questionId,
+        selectedOption: ans.selectedOption,
+        isCorrect: ans.selectedOption === correctOption,
+        timeSpentSeconds: ans.timeSpentSeconds ?? null,
+        explanation: explanationMap.get(ans.questionId) ?? null,
+      };
+    }
+  );
+
+  const verifiedCorrectCount = verifiedAnswers.filter((a) => a.isCorrect).length;
 
   const simulation = await prisma.simulation.create({
     data: {
@@ -85,24 +117,22 @@ export async function POST(request: Request) {
       title: title || "Simulado Cronometrado",
       subjectName: subjectName || "Geral (Todos os Períodos)",
       totalQuestions,
-      correctCount,
+      correctCount: verifiedCorrectCount,
       durationSeconds: durationSeconds || 0,
     },
   });
 
-  // Record AnswerLogs in batch
-  if (Array.isArray(answers) && answers.length > 0) {
-    await prisma.answerLog.createMany({
-      data: answers.map((ans: { questionId: string; selectedOption: number; isCorrect: boolean; timeSpentSeconds?: number }) => ({
-        userId: session.userId,
-        questionId: ans.questionId,
-        selectedOption: ans.selectedOption,
-        isCorrect: ans.isCorrect,
-        mode: "simulation",
-        timeSpentSeconds: ans.timeSpentSeconds ?? null,
-      })),
-    });
-  }
+  // Record AnswerLogs in batch using server-verified results
+  await prisma.answerLog.createMany({
+    data: verifiedAnswers.map((ans) => ({
+      userId: session.userId,
+      questionId: ans.questionId,
+      selectedOption: ans.selectedOption,
+      isCorrect: ans.isCorrect,
+      mode: "simulation",
+      timeSpentSeconds: ans.timeSpentSeconds,
+    })),
+  });
 
   // Update streak if needed
   const today = getTodayString();
@@ -134,5 +164,15 @@ export async function POST(request: Request) {
     });
   }
 
-  return NextResponse.json({ success: true, simulationId: simulation.id });
+  return NextResponse.json({
+    success: true,
+    simulationId: simulation.id,
+    correctCount: verifiedCorrectCount,
+    // Return explanations only after submission
+    results: verifiedAnswers.map((a) => ({
+      questionId: a.questionId,
+      isCorrect: a.isCorrect,
+      explanation: a.explanation,
+    })),
+  });
 }

@@ -31,7 +31,7 @@ const PERIOD_COLORS: Record<number, { dot: string; text: string }> = {
   2: { dot: "bg-blue-500",   text: "text-blue-700 dark:text-blue-400" },
   3: { dot: "bg-amber-500",  text: "text-amber-700 dark:text-amber-400" },
   4: { dot: "bg-rose-500",   text: "text-rose-700 dark:text-rose-400" },
-  5: { dot: "bg-teal-600",   text: "text-teal-700 dark:text-teal-400" },
+  5: { dot: "bg-orange-500", text: "text-orange-700 dark:text-orange-400" },
   6: { dot: "bg-emerald-600", text: "text-emerald-700 dark:text-emerald-400" },
 };
 
@@ -73,7 +73,7 @@ function SubjectCard({ subject }: { subject: Subject }) {
       {/* Progress bar */}
       <div className="mb-3.5 h-1 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
         <div
-          className="h-full rounded-full bg-teal-700 transition-all duration-700 dark:bg-teal-500"
+          className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-700"
           style={{ width: `${pct}%` }}
         />
       </div>

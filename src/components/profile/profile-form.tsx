@@ -104,7 +104,7 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
       )}
 
       {success && (
-        <div className="mb-5 flex items-center gap-2 rounded-xl bg-teal-50 p-3 text-xs font-medium text-teal-800 dark:bg-teal-950/40 dark:text-teal-300">
+        <div className="mb-5 flex items-center gap-2 rounded-xl bg-amber-50 p-3 text-xs font-medium text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
           <CheckCircle2 size={15} className="shrink-0" />
           <span>Perfil atualizado com sucesso! As alterações já estão ativas.</span>
         </div>
@@ -115,7 +115,7 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
         <div>
           <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
             <span className="flex items-center gap-1.5">
-              <User size={13} className="text-teal-600 dark:text-teal-400" />
+              <User size={13} className="text-orange-600 dark:text-amber-400" />
               <span>Nome Completo</span>
             </span>
           </label>
@@ -125,7 +125,7 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Seu nome"
-            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-teal-600 focus:bg-white focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-teal-500 dark:focus:bg-zinc-900 transition-colors"
+            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-amber-400 dark:focus:bg-zinc-900 transition-colors"
           />
         </div>
 
@@ -133,7 +133,7 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
         <div>
           <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
             <span className="flex items-center gap-1.5">
-              <Building2 size={13} className="text-teal-600 dark:text-teal-400" />
+              <Building2 size={13} className="text-orange-600 dark:text-amber-400" />
               <span>Faculdade de Medicina</span>
             </span>
           </label>
@@ -143,7 +143,7 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
             value={college}
             onChange={(e) => setCollege(e.target.value)}
             placeholder="Ex: Universidade de São Paulo (USP)"
-            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-teal-600 focus:bg-white focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-teal-500 dark:focus:bg-zinc-900 transition-colors"
+            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-amber-400 dark:focus:bg-zinc-900 transition-colors"
           />
           <datalist id="med-schools-list">
             {BRAZILIAN_MED_SCHOOLS.map((school) => (
@@ -159,14 +159,14 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
         <div>
           <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
             <span className="flex items-center gap-1.5">
-              <GraduationCap size={13} className="text-teal-600 dark:text-teal-400" />
+              <GraduationCap size={13} className="text-orange-600 dark:text-amber-400" />
               <span>Período Acadêmico</span>
             </span>
           </label>
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
-            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 focus:border-teal-600 focus:bg-white focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-50 dark:focus:border-teal-500 dark:focus:bg-zinc-900 transition-colors"
+            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-50 dark:focus:border-amber-400 dark:focus:bg-zinc-900 transition-colors"
           >
             <option value="">Selecione seu período atual...</option>
 
@@ -202,7 +202,7 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
         <div>
           <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
             <span className="flex items-center gap-1.5">
-              <Stethoscope size={13} className="text-teal-600 dark:text-teal-400" />
+              <Stethoscope size={13} className="text-orange-600 dark:text-amber-400" />
               <span>Especialidade dos Sonhos (Opcional)</span>
             </span>
           </label>
@@ -211,7 +211,7 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
             value={targetSpecialty}
             onChange={(e) => setTargetSpecialty(e.target.value)}
             placeholder="Ex: Cardiologia, Cirurgia Geral, Pediatria, Neurologia..."
-            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-teal-600 focus:bg-white focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-teal-500 dark:focus:bg-zinc-900 transition-colors"
+            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-amber-400 dark:focus:bg-zinc-900 transition-colors"
           />
         </div>
       </div>
@@ -221,7 +221,7 @@ export function ProfileForm({ initialData, onSave }: ProfileFormProps) {
           type="submit"
           disabled={saving}
           className={cn(
-            "flex items-center gap-2 rounded-xl bg-teal-700 px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-teal-800 active:scale-98 dark:bg-teal-600 dark:hover:bg-teal-500",
+            "flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-5 py-2.5 text-xs font-semibold text-white shadow-sm shadow-orange-950/20 transition-all active:scale-98",
             saving && "opacity-75 cursor-not-allowed"
           )}
         >

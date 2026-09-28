@@ -37,7 +37,7 @@ export function LeaderboardList({ items, currentUserId }: LeaderboardListProps) 
               className={cn(
                 "flex items-center justify-between gap-3 p-3.5 sm:px-5 transition-colors",
                 isCurrentUser
-                  ? "bg-teal-50/70 dark:bg-teal-950/40 ring-1 ring-inset ring-teal-500/20"
+                  ? "bg-amber-50/70 dark:bg-amber-950/40 ring-1 ring-inset ring-amber-500/20"
                   : "hover:bg-zinc-50/80 dark:hover:bg-zinc-800/50"
               )}
             >
@@ -70,12 +70,12 @@ export function LeaderboardList({ items, currentUserId }: LeaderboardListProps) 
                       {item.name}
                     </span>
                     {isCurrentUser && (
-                      <span className="rounded-full bg-teal-100 px-1.5 py-0.2 text-[9px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                      <span className="rounded-full bg-amber-100 px-1.5 py-0.2 text-[9px] font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
                         Você
                       </span>
                     )}
                     {item.plan === "pro" && (
-                      <span className="rounded-full bg-teal-100/60 px-1.5 py-0.2 text-[9px] font-bold text-teal-700 dark:bg-teal-950/80 dark:text-teal-400">
+                      <span className="rounded-full bg-amber-100/60 px-1.5 py-0.2 text-[9px] font-bold text-amber-800 dark:bg-amber-950/80 dark:text-amber-300">
                         PRO
                       </span>
                     )}
@@ -96,8 +96,8 @@ export function LeaderboardList({ items, currentUserId }: LeaderboardListProps) 
                   </span>
                 )}
 
-                <div className="flex items-center gap-1 rounded-xl bg-teal-50 px-2.5 py-1 text-xs font-bold text-teal-800 dark:bg-teal-950/80 dark:text-teal-300">
-                  <Zap size={12} className="text-teal-600 dark:text-teal-400" />
+                <div className="flex items-center gap-1 rounded-xl bg-amber-50 px-2.5 py-1 text-xs font-bold text-orange-700 dark:bg-amber-950/80 dark:text-amber-300">
+                  <Zap size={12} className="text-amber-500 dark:text-amber-400 fill-amber-500/30" />
                   <span>{item.xp} XP</span>
                 </div>
               </div>

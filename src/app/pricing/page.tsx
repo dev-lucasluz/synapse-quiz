@@ -62,7 +62,7 @@ export default function PricingPage() {
       <main className="mx-auto max-w-4xl px-4 py-12">
         {/* Header */}
         <div className="mb-12 text-center">
-          <span className="mb-2.5 inline-block rounded-full border border-teal-200 bg-teal-50 px-3 py-0.5 text-xs font-semibold text-teal-700 dark:border-teal-900 dark:bg-teal-950/60 dark:text-teal-400">
+          <span className="mb-2.5 inline-block rounded-full border border-amber-200 bg-amber-50 px-3 py-0.5 text-xs font-semibold text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-300">
             Planos Acadêmicos
           </span>
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
@@ -113,7 +113,7 @@ export default function PricingPage() {
                 "Alternância entre Modo Claro e Escuro",
               ].map((feat) => (
                 <li key={feat} className="flex items-start gap-2.5 text-xs text-zinc-700 dark:text-zinc-300">
-                  <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-teal-700 dark:text-teal-400" />
+                  <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-orange-600 dark:text-amber-400" />
                   <span>{feat}</span>
                 </li>
               ))}
@@ -138,12 +138,12 @@ export default function PricingPage() {
             className={cn(
               "relative flex flex-col rounded-xl border-2 bg-white p-6 shadow-sm dark:bg-zinc-900",
               currentPlan === "pro"
-                ? "border-teal-700 dark:border-teal-500"
-                : "border-teal-700/60 dark:border-teal-600/50"
+                ? "border-orange-600 dark:border-amber-500"
+                : "border-amber-500/60 dark:border-amber-500/50"
             )}
           >
             {currentPlan === "pro" ? (
-              <span className="absolute -top-3 left-5 rounded-full bg-teal-700 px-3 py-0.5 text-[11px] font-semibold text-white dark:bg-teal-600">
+              <span className="absolute -top-3 left-5 rounded-full bg-gradient-to-r from-[#f59e0b] to-[#ea580c] px-3 py-0.5 text-[11px] font-semibold text-white">
                 Assinatura Ativa
               </span>
             ) : (
@@ -163,7 +163,7 @@ export default function PricingPage() {
                 <span className="text-2xl font-extrabold text-zinc-900 sm:text-3xl dark:text-zinc-50">
                   A definir
                 </span>
-                <span className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
                   Em Breve
                 </span>
               </div>
@@ -173,19 +173,19 @@ export default function PricingPage() {
             </div>
 
             <ul className="mb-6 flex-1 space-y-3 border-t border-zinc-100 pt-5 dark:border-zinc-800">
-              <li className="text-[11px] font-bold uppercase tracking-wider text-teal-800 dark:text-teal-300">
+              <li className="text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
                 Todos os recursos do Gratuito, mais:
               </li>
               {proFeatures.map(({ icon: Icon, text }) => (
                 <li key={text} className="flex items-start gap-2.5 text-xs text-zinc-700 dark:text-zinc-300">
-                  <Icon size={15} className="mt-0.5 shrink-0 text-teal-700 dark:text-teal-400" />
+                  <Icon size={15} className="mt-0.5 shrink-0 text-orange-600 dark:text-amber-400" />
                   <span>{text}</span>
                 </li>
               ))}
             </ul>
 
             {currentPlan === "pro" ? (
-              <div className="rounded-lg border border-teal-200 bg-teal-50 py-2.5 text-center text-xs font-semibold text-teal-800 dark:border-teal-900 dark:bg-teal-950/60 dark:text-teal-300">
+              <div className="rounded-lg border border-amber-200 bg-amber-50 py-2.5 text-center text-xs font-semibold text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-300">
                 ✓ Assinatura Pro Ativa
               </div>
             ) : (
@@ -214,10 +214,10 @@ export default function PricingPage() {
         </div>
 
         {/* Pro Plan Feature Deep Dive: O que estará incluído */}
-        <section className="mt-14 rounded-2xl border border-teal-200/80 bg-white p-6 shadow-sm dark:border-teal-900/60 dark:bg-zinc-900 sm:p-8">
+        <section className="mt-14 rounded-2xl border border-amber-200/80 bg-white p-6 shadow-sm dark:border-amber-900/60 dark:bg-zinc-900 sm:p-8">
           <div className="mb-6 text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-3 py-1 text-xs font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
-              <Sparkles size={13} className="text-teal-600 dark:text-teal-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+              <Sparkles size={13} className="text-amber-500 dark:text-amber-400" />
               O Que Vem por Aí no Synapse Pro
             </span>
             <h2 className="mt-2 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-2xl">
@@ -232,11 +232,11 @@ export default function PricingPage() {
             {/* Destaque 1: Modo Simulado Cronometrado */}
             <div className="rounded-xl border border-zinc-200/90 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-800/40">
               <div className="mb-3 flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white shadow-2xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#fbbf24] via-[#f97316] to-[#ea580c] text-white shadow-2xs">
                   <Target size={18} />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 dark:text-amber-400">
                     Ambiente Real de Prova
                   </span>
                   <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
@@ -249,15 +249,15 @@ export default function PricingPage() {
               </p>
               <ul className="mt-3 space-y-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
                 <li className="flex items-center gap-1.5">
-                  <Timer size={12} className="text-teal-600 dark:text-teal-400" />
+                  <Timer size={12} className="text-orange-600 dark:text-amber-400" />
                   Alerta sonoro e visual nos últimos 5 minutos de prova
                 </li>
                 <li className="flex items-center gap-1.5">
-                  <CheckCircle2 size={12} className="text-teal-600 dark:text-teal-400" />
+                  <CheckCircle2 size={12} className="text-orange-600 dark:text-amber-400" />
                   Grade de navegação livre para pular e marcar dúvidas (flagging)
                 </li>
                 <li className="flex items-center gap-1.5">
-                  <BarChart3 size={12} className="text-teal-600 dark:text-teal-400" />
+                  <BarChart3 size={12} className="text-orange-600 dark:text-amber-400" />
                   Diagnóstico pós-prova: tempo médio gasto por acerto vs. erro
                 </li>
               </ul>
@@ -266,11 +266,11 @@ export default function PricingPage() {
             {/* Destaque 2: Questões Ilimitadas */}
             <div className="rounded-xl border border-zinc-200/90 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-800/40">
               <div className="mb-3 flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white shadow-2xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#fbbf24] via-[#f97316] to-[#ea580c] text-white shadow-2xs">
                   <Infinity size={18} />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 dark:text-amber-400">
                     Estudo Sem Limites
                   </span>
                   <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
@@ -283,11 +283,11 @@ export default function PricingPage() {
               </p>
               <ul className="mt-3 space-y-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
                 <li className="flex items-center gap-1.5">
-                  <CheckCircle2 size={12} className="text-teal-600 dark:text-teal-400" />
+                  <CheckCircle2 size={12} className="text-orange-600 dark:text-amber-400" />
                   Acesso contínuo 24/7 sem interrupções
                 </li>
                 <li className="flex items-center gap-1.5">
-                  <CheckCircle2 size={12} className="text-teal-600 dark:text-teal-400" />
+                  <CheckCircle2 size={12} className="text-orange-600 dark:text-amber-400" />
                   Repetições inteligentes sem restrição de volume
                 </li>
               </ul>
@@ -296,11 +296,11 @@ export default function PricingPage() {
             {/* Destaque 3: Caderno de Erros Infinito */}
             <div className="rounded-xl border border-zinc-200/90 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-800/40">
               <div className="mb-3 flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white shadow-2xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#fbbf24] via-[#f97316] to-[#ea580c] text-white shadow-2xs">
                   <BookOpen size={18} />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 dark:text-amber-400">
                     Retenção Direcionada
                   </span>
                   <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
@@ -316,11 +316,11 @@ export default function PricingPage() {
             {/* Destaque 4: Filtros Avançados por Banca */}
             <div className="rounded-xl border border-zinc-200/90 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-800/40">
               <div className="mb-3 flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white shadow-2xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#fbbf24] via-[#f97316] to-[#ea580c] text-white shadow-2xs">
                   <Filter size={18} />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 dark:text-amber-400">
                     Treinamento Específico
                   </span>
                   <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">

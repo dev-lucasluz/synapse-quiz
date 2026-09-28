@@ -23,14 +23,14 @@ export const MEDICAL_AVATARS: MedicalAvatar[] = [
     id: "avatar:doctor-m",
     label: "Médico Clínico",
     icon: Stethoscope,
-    bgColor: "bg-teal-700 dark:bg-teal-600",
+    bgColor: "bg-orange-600 dark:bg-orange-500",
     iconColor: "text-white",
   },
   {
     id: "avatar:doctor-f",
     label: "Médica Clínica",
     icon: HeartPulse,
-    bgColor: "bg-teal-600 dark:bg-teal-500",
+    bgColor: "bg-amber-600 dark:bg-amber-500",
     iconColor: "text-white",
   },
   {

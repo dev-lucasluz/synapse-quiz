@@ -201,11 +201,11 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
         <div className="relative flex h-14 shrink-0 items-center border-b border-zinc-100 px-3.5 dark:border-zinc-800/80">
           <Link
             href="/dashboard"
-            className="flex min-w-0 items-center gap-2.5 font-bold text-teal-700 dark:text-teal-400"
+            className="flex min-w-0 items-center gap-2.5 font-bold text-orange-600 dark:text-amber-400"
             title="Synapse Quiz"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-teal-700 text-white shadow-2xs transition-transform hover:scale-105 dark:bg-teal-600">
-              <Brain size={17} />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-black border border-zinc-800 text-amber-400 shadow-2xs transition-transform hover:scale-105">
+              <Brain size={17} className="text-amber-400" />
             </div>
             <span
               className={cn(
@@ -215,7 +215,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                   : "max-w-[140px] opacity-100"
               )}
             >
-              Synapse <span className="text-teal-700 dark:text-teal-400">Quiz</span>
+              Synapse <span className="text-orange-600 dark:text-amber-400">Quiz</span>
             </span>
           </Link>
 
@@ -266,7 +266,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
               mounted && isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100"
             )}
           >
-            <span className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 whitespace-nowrap">
+            <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-200 whitespace-nowrap">
               Tema
             </span>
             <div className="inline-flex items-center rounded-full border border-zinc-200/80 bg-zinc-100/90 p-0.5 dark:border-zinc-700/60 dark:bg-zinc-800/80 shrink-0">
@@ -279,7 +279,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                   "flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors duration-150",
                   theme !== "dark"
                     ? "bg-white font-semibold text-zinc-800 shadow-2xs dark:bg-zinc-700 dark:text-zinc-100"
-                    : "text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
+                    : "text-zinc-400 hover:text-zinc-700 dark:text-zinc-300 dark:hover:text-white"
                 )}
                 title="Ativar tema claro"
               >
@@ -295,11 +295,11 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                   "flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors duration-150",
                   theme === "dark"
                     ? "bg-zinc-700 font-semibold text-zinc-100 shadow-2xs"
-                    : "text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
+                    : "text-zinc-400 hover:text-zinc-700 dark:text-zinc-300 dark:hover:text-white"
                 )}
                 title="Ativar tema escuro"
               >
-                <Moon size={11} className={theme === "dark" ? "text-teal-400" : ""} />
+                <Moon size={11} className={theme === "dark" ? "text-amber-400" : ""} />
                 <span>Escuro</span>
               </button>
             </div>
@@ -318,8 +318,8 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                   className={cn(
                     "flex h-10 w-full items-center rounded-xl border text-xs font-medium transition-colors duration-150 px-2.5 overflow-hidden",
                     isActive
-                      ? "border-teal-200 bg-teal-50/90 font-semibold text-teal-800 shadow-2xs ring-1 ring-teal-500/10 dark:border-teal-800/80 dark:bg-teal-950/60 dark:text-teal-300"
-                      : "border-zinc-200/70 bg-white/50 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50/80 hover:text-zinc-900 dark:border-zinc-800/80 dark:bg-zinc-900/30 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-100"
+                      ? "border-amber-200 bg-amber-50/90 font-semibold text-amber-900 shadow-2xs ring-1 ring-amber-500/15 dark:border-amber-800/80 dark:bg-amber-950/40 dark:text-amber-300"
+                      : "border-zinc-200/70 bg-white/50 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50/80 hover:text-zinc-900 dark:border-zinc-800/80 dark:bg-zinc-900/30 dark:text-zinc-200 dark:hover:border-zinc-700 dark:hover:bg-zinc-800/50 dark:hover:text-white"
                   )}
                   title={mounted && isCollapsed ? label : undefined}
                 >
@@ -328,8 +328,8 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                     className={cn(
                       "shrink-0 transition-transform duration-150 group-hover:scale-105",
                       isActive
-                        ? "text-teal-700 dark:text-teal-400"
-                        : "text-zinc-400 group-hover:text-zinc-700 dark:text-zinc-500 dark:group-hover:text-zinc-300"
+                        ? "text-orange-600 dark:text-amber-400"
+                        : "text-zinc-400 group-hover:text-zinc-700 dark:text-zinc-300 dark:group-hover:text-white"
                     )}
                   />
 
@@ -353,7 +353,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                     )}
                   >
                     {isPro && (
-                      <span className="rounded-full bg-teal-100 px-1.5 py-0.5 text-[9px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                      <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
                         PRO
                       </span>
                     )}
@@ -370,7 +370,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                   <div className="pointer-events-none absolute top-1/2 left-full z-50 ml-3 hidden -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-lg bg-zinc-900 px-2.5 py-1 text-xs font-medium text-white shadow-xl group-hover:flex dark:bg-zinc-100 dark:text-zinc-900">
                     <span>{label}</span>
                     {isPro && (
-                      <span className="rounded bg-teal-500/20 px-1 py-0.2 text-[9px] font-bold text-teal-300 dark:text-teal-700">
+                      <span className="rounded bg-amber-500/20 px-1 py-0.2 text-[9px] font-bold text-amber-300 dark:text-amber-700">
                         PRO
                       </span>
                     )}
@@ -411,7 +411,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
               </Link>
               <div className="pointer-events-none absolute top-1/2 left-full z-50 ml-3 hidden -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-lg bg-zinc-900 px-2.5 py-1 text-xs font-medium text-white shadow-xl group-hover:flex dark:bg-zinc-100 dark:text-zinc-900">
                 <span>{currentName || "Estudante"}</span>
-                <span className="rounded bg-teal-500/20 px-1 py-0.2 text-[9px] font-bold text-teal-300 dark:text-teal-700">
+                <span className="rounded bg-amber-500/20 px-1 py-0.2 text-[9px] font-bold text-amber-300 dark:text-amber-700">
                   {plan === "pro" ? "PRO" : "Free"}
                 </span>
               </div>
@@ -454,7 +454,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                   <p className="max-w-[105px] truncate text-xs font-semibold text-zinc-900 dark:text-zinc-100">
                     {currentName || "Estudante"}
                   </p>
-                  <p className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[105px]">
+                  <p className="text-[10px] text-zinc-500 dark:text-zinc-300 truncate max-w-[105px]">
                     {currentCollege || currentPeriod
                       ? `${currentCollege || ""}${currentCollege && currentPeriod ? " • " : ""}${currentPeriod || ""}`
                       : currentPlan === "pro"
@@ -464,11 +464,11 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                 </div>
               </div>
               {currentPlan === "pro" ? (
-                <span className="shrink-0 rounded-full bg-teal-100 px-2 py-0.5 text-[9px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
                   PRO
                 </span>
               ) : (
-                <span className="shrink-0 rounded-full border border-teal-200 bg-white px-2 py-0.5 text-[10px] font-medium text-teal-700 hover:bg-teal-50 dark:border-teal-900 dark:bg-zinc-900 dark:text-teal-400">
+                <span className="shrink-0 rounded-full border border-amber-200 bg-white px-2 py-0.5 text-[10px] font-medium text-orange-600 hover:bg-amber-50 dark:border-amber-900 dark:bg-zinc-900 dark:text-amber-400">
                   Perfil
                 </span>
               )}
@@ -477,7 +477,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
             {/* Logout button */}
             <button
               onClick={handleLogout}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200/80 bg-white py-2 text-xs font-medium text-zinc-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-zinc-700/80 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:border-red-900 dark:hover:bg-red-950/50 dark:hover:text-red-400"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200/80 bg-white py-2 text-xs font-medium text-zinc-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-zinc-700/80 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:border-red-900 dark:hover:bg-red-950/50 dark:hover:text-red-400"
               title="Encerrar sessão"
               aria-label="Sair"
             >
@@ -492,12 +492,12 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
           MOBILE: Top Header Bar
          ═══════════════════════════════════════════════════════════════════════ */}
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-zinc-200/80 bg-white/90 px-4 py-2.5 backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-900/90 md:hidden">
-        <Link href="/dashboard" className="flex items-center gap-2 font-bold text-teal-700 dark:text-teal-400">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-700 text-white dark:bg-teal-600">
-            <Brain size={16} />
+        <Link href="/dashboard" className="flex items-center gap-2 font-bold text-orange-600 dark:text-amber-400">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-black border border-zinc-800 text-amber-400">
+            <Brain size={16} className="text-amber-400" />
           </div>
           <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Synapse <span className="text-teal-700 dark:text-teal-400">Quiz</span>
+            Synapse <span className="text-orange-600 dark:text-amber-400">Quiz</span>
           </span>
         </Link>
 
@@ -515,13 +515,13 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
             />
           </Link>
           {currentPlan === "pro" ? (
-            <span className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
               PRO
             </span>
           ) : (
             <Link
               href="/pricing"
-              className="rounded-full border border-zinc-200 bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-700 hover:text-teal-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+              className="rounded-full border border-zinc-200 bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-700 hover:text-orange-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
             >
               Upgrade
             </Link>
@@ -556,14 +556,14 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
               className={cn(
                 "relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl py-1.5 transition-all duration-150",
                 isActive
-                  ? "border border-teal-200/80 bg-teal-50/90 font-semibold text-teal-800 shadow-2xs ring-1 ring-teal-500/15 dark:border-teal-800/70 dark:bg-teal-950/60 dark:text-teal-300"
+                  ? "border border-amber-200/80 bg-amber-50/90 font-semibold text-amber-900 shadow-2xs ring-1 ring-amber-500/15 dark:border-amber-800/70 dark:bg-amber-950/60 dark:text-amber-300"
                   : "border border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               )}
             >
               <div className="relative">
                 <Icon size={17} />
                 {isPro && (
-                  <span className="absolute -top-0.5 -right-1.5 h-1.5 w-1.5 rounded-full bg-teal-600 ring-1 ring-white dark:bg-teal-400 dark:ring-zinc-900" />
+                  <span className="absolute -top-0.5 -right-1.5 h-1.5 w-1.5 rounded-full bg-orange-500 ring-1 ring-white dark:bg-amber-400 dark:ring-zinc-900" />
                 )}
               </div>
               <span className="max-w-[48px] truncate text-center text-[10px] leading-tight">

@@ -44,8 +44,8 @@ export async function POST(request: Request) {
   }
 
   const { questionId } = await request.json();
-  if (!questionId) {
-    return NextResponse.json({ error: "questionId é obrigatório" }, { status: 400 });
+  if (!questionId || typeof questionId !== "string" || questionId.length > 100) {
+    return NextResponse.json({ error: "questionId inválido" }, { status: 400 });
   }
 
   const existing = await prisma.bookmark.findUnique({
@@ -56,6 +56,14 @@ export async function POST(request: Request) {
     await prisma.bookmark.delete({ where: { id: existing.id } });
     return NextResponse.json({ bookmarked: false });
   } else {
+    const questionExists = await prisma.question.findUnique({
+      where: { id: questionId },
+      select: { id: true },
+    });
+    if (!questionExists) {
+      return NextResponse.json({ error: "Questão não encontrada" }, { status: 404 });
+    }
+
     await prisma.bookmark.create({
       data: { userId: session.userId, questionId },
     });

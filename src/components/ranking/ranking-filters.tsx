@@ -34,7 +34,7 @@ export function RankingFilters({
               : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
           )}
         >
-          <CalendarDays size={13} className="text-teal-600 dark:text-teal-400" />
+          <CalendarDays size={13} className="text-orange-600 dark:text-amber-400" />
           <span>Semanal</span>
         </button>
 
@@ -48,7 +48,7 @@ export function RankingFilters({
               : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
           )}
         >
-          <CalendarRange size={13} className="text-teal-600 dark:text-teal-400" />
+          <CalendarRange size={13} className="text-orange-600 dark:text-amber-400" />
           <span>Mensal</span>
         </button>
       </div>
@@ -62,7 +62,7 @@ export function RankingFilters({
           className={cn(
             "flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all whitespace-nowrap",
             scope === "all"
-              ? "border-teal-500 bg-teal-50/80 text-teal-800 dark:border-teal-600 dark:bg-teal-950/60 dark:text-teal-300 font-semibold shadow-2xs"
+              ? "border-amber-500 bg-amber-50/80 text-amber-900 dark:border-amber-500 dark:bg-amber-950/60 dark:text-amber-300 font-semibold shadow-2xs"
               : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700"
           )}
         >
@@ -77,7 +77,7 @@ export function RankingFilters({
           className={cn(
             "flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all whitespace-nowrap",
             scope === "my_college"
-              ? "border-teal-500 bg-teal-50/80 text-teal-800 dark:border-teal-600 dark:bg-teal-950/60 dark:text-teal-300 font-semibold shadow-2xs"
+              ? "border-amber-500 bg-amber-50/80 text-amber-900 dark:border-amber-500 dark:bg-amber-950/60 dark:text-amber-300 font-semibold shadow-2xs"
               : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700"
           )}
           title={userCollege ? `Filtrar apenas ${userCollege}` : "Configure sua faculdade no Perfil"}
@@ -93,7 +93,7 @@ export function RankingFilters({
           className={cn(
             "flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all whitespace-nowrap",
             scope === "my_period"
-              ? "border-teal-500 bg-teal-50/80 text-teal-800 dark:border-teal-600 dark:bg-teal-950/60 dark:text-teal-300 font-semibold shadow-2xs"
+              ? "border-amber-500 bg-amber-50/80 text-amber-900 dark:border-amber-500 dark:bg-amber-950/60 dark:text-amber-300 font-semibold shadow-2xs"
               : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700"
           )}
           title={userPeriod ? `Filtrar apenas ${userPeriod}` : "Configure seu período no Perfil"}

@@ -108,7 +108,7 @@ export default function RankingPage() {
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-xl border border-teal-200/80 bg-teal-50/70 px-3 py-1.5 text-xs font-semibold text-teal-800 dark:border-teal-900/60 dark:bg-teal-950/40 dark:text-teal-300">
+          <div className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-xl border border-amber-200/80 bg-amber-50/70 px-3 py-1.5 text-xs font-semibold text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300">
             <Sparkles size={13} />
             <span>+10 XP por acerto</span>
           </div>

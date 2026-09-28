@@ -51,7 +51,7 @@ export function PlanCard({ currentPlan, onPlanChange, className }: PlanCardProps
       className={cn(
         "rounded-2xl border p-6 shadow-xs flex flex-col justify-between transition-all",
         isPro
-          ? "border-teal-300/80 bg-linear-to-b from-teal-50/40 to-white dark:border-teal-900/60 dark:from-teal-950/20 dark:to-zinc-900"
+          ? "border-amber-300/80 bg-linear-to-b from-amber-50/40 to-white dark:border-amber-900/60 dark:from-amber-950/20 dark:to-zinc-900"
           : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900",
         className
       )}
@@ -64,7 +64,7 @@ export function PlanCard({ currentPlan, onPlanChange, className }: PlanCardProps
               className={cn(
                 "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
                 isPro
-                  ? "bg-teal-700 text-white dark:bg-teal-600 shadow-2xs"
+                  ? "bg-gradient-to-br from-[#fbbf24] via-[#f97316] to-[#ea580c] text-white shadow-2xs"
                   : "bg-amber-400/20 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400"
               )}
             >
@@ -76,7 +76,7 @@ export function PlanCard({ currentPlan, onPlanChange, className }: PlanCardProps
                   Plano & Assinatura
                 </h3>
                 {isPro ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-teal-100 px-2 py-0.5 text-[9px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
                     <Sparkles size={10} />
                     <span>PRO ATIVO</span>
                   </span>
@@ -94,7 +94,7 @@ export function PlanCard({ currentPlan, onPlanChange, className }: PlanCardProps
 
           <Link
             href="/pricing"
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-teal-700 hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300 transition-colors"
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-orange-600 hover:text-orange-700 dark:text-amber-400 dark:hover:text-amber-300 transition-colors"
           >
             <span>Planos</span>
             <ArrowRight size={11} />
@@ -103,8 +103,8 @@ export function PlanCard({ currentPlan, onPlanChange, className }: PlanCardProps
 
         {/* ── Mensagem de Feedback ─────────────────────────────────────────── */}
         {successMsg && (
-          <div className="mb-3.5 flex items-center gap-2 rounded-xl border border-teal-200/90 bg-teal-50/80 p-2.5 text-xs text-teal-900 dark:border-teal-900/60 dark:bg-teal-950/50 dark:text-teal-200">
-            <ShieldCheck size={14} className="text-teal-700 dark:text-teal-400 shrink-0" />
+          <div className="mb-3.5 flex items-center gap-2 rounded-xl border border-amber-200/90 bg-amber-50/80 p-2.5 text-xs text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/50 dark:text-amber-200">
+            <ShieldCheck size={14} className="text-orange-600 dark:text-amber-400 shrink-0" />
             <span className="font-medium text-[11px]">{successMsg}</span>
           </div>
         )}
@@ -133,7 +133,7 @@ export function PlanCard({ currentPlan, onPlanChange, className }: PlanCardProps
               className={cn(
                 "rounded-xl p-2 flex items-start gap-2 border transition-colors",
                 isPro
-                  ? "border-teal-200/60 bg-teal-50/40 dark:border-teal-900/40 dark:bg-teal-950/20"
+                  ? "border-amber-200/60 bg-amber-50/40 dark:border-amber-900/40 dark:bg-amber-950/20"
                   : "border-zinc-100 bg-zinc-50/70 dark:border-zinc-800/80 dark:bg-zinc-800/40"
               )}
             >
@@ -141,8 +141,8 @@ export function PlanCard({ currentPlan, onPlanChange, className }: PlanCardProps
                 className={cn(
                   "flex h-4 w-4 shrink-0 items-center justify-center rounded-full mt-0.5",
                   isPro
-                    ? "bg-teal-700 text-white dark:bg-teal-500"
-                    : "bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300"
+                    ? "bg-orange-600 text-white dark:bg-amber-500"
+                    : "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
                 )}
               >
                 <Check size={9} strokeWidth={3} />
@@ -182,7 +182,7 @@ export function PlanCard({ currentPlan, onPlanChange, className }: PlanCardProps
             type="button"
             disabled={loading}
             onClick={() => handleTogglePlan("pro")}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 py-2.5 px-4 text-xs font-bold text-white shadow-sm shadow-teal-700/20 hover:bg-teal-800 active:scale-98 transition-all dark:bg-teal-600 dark:hover:bg-teal-500 cursor-pointer disabled:opacity-50"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] py-2.5 px-4 text-xs font-bold text-white shadow-sm shadow-orange-950/20 active:scale-98 transition-all cursor-pointer disabled:opacity-50"
           >
             {loading ? (
               <>

@@ -1,9 +1,21 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "synapse-quiz-super-secret-jwt-2024"
-);
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.JWT_SECRET;
+  if (!secret || secret === "synapse-quiz-super-secret-jwt-2024") {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "FATAL DEPLOYMENT ERROR: JWT_SECRET environment variable is missing or using default placeholder in production."
+      );
+    }
+    return new TextEncoder().encode("synapse-quiz-local-dev-only-secret-2024");
+  }
+  return new TextEncoder().encode(secret);
+}
+
+const SECRET = getJwtSecret();
+
 
 const COOKIE_NAME = "synapse_session";
 

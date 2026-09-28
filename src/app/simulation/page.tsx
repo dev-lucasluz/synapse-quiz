@@ -253,7 +253,7 @@ export default function SimulationPage() {
       <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
         <Navbar />
         <div className="flex min-h-[60vh] items-center justify-center">
-          <Loader2 size={28} className="animate-spin text-teal-700 dark:text-teal-400" />
+          <Loader2 size={28} className="animate-spin text-orange-600 dark:text-amber-400" />
         </div>
       </div>
     );
@@ -266,8 +266,8 @@ export default function SimulationPage() {
       <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
         <Navbar userName={userData?.user.name} plan="free" />
         <main className="mx-auto max-w-3xl px-4 py-16 text-center">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800">
-            <Lock size={32} className="text-teal-700 dark:text-teal-400" />
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800">
+            <Lock size={32} className="text-orange-600 dark:text-amber-400" />
           </div>
 
           <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800 dark:bg-amber-900/60 dark:text-amber-300">
@@ -294,7 +294,7 @@ export default function SimulationPage() {
                 key={i}
                 className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white p-3 text-xs font-semibold text-zinc-800 shadow-2xs dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
               >
-                <CheckCircle2 size={16} className="shrink-0 text-teal-600 dark:text-teal-400" />
+                <CheckCircle2 size={16} className="shrink-0 text-orange-600 dark:text-amber-400" />
                 <span>{benefit}</span>
               </div>
             ))}
@@ -316,7 +316,7 @@ export default function SimulationPage() {
             </Link>
             <Link
               href="/quiz"
-              className="rounded-xl bg-teal-700 px-6 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+              className="rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-6 py-3 text-sm font-bold text-white shadow-sm shadow-orange-950/20 transition-all"
             >
               Ir para o Quiz Diário Gratuito
             </Link>
@@ -338,7 +338,7 @@ export default function SimulationPage() {
       {stage === "setup" && (
         <main className="mx-auto max-w-2xl px-4 py-12">
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-orange-700 dark:bg-amber-950 dark:text-amber-300">
               <Target size={24} />
             </div>
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
@@ -358,7 +358,7 @@ export default function SimulationPage() {
               <select
                 value={selectedSubjectId}
                 onChange={(e) => setSelectedSubjectId(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 bg-white p-3 text-xs font-semibold text-zinc-800 outline-none focus:border-teal-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 sm:text-sm"
+                className="w-full rounded-xl border border-zinc-200 bg-white p-3 text-xs font-semibold text-zinc-800 outline-none focus:border-amber-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 sm:text-sm"
               >
                 <option value="">📚 Simulado Geral (Misto - Todos os Períodos)</option>
                 {subjects.map((s) => (
@@ -383,7 +383,7 @@ export default function SimulationPage() {
                     className={cn(
                       "flex flex-col items-center justify-center rounded-xl border py-3 text-center transition-all",
                       questionCount === count
-                        ? "border-teal-700 bg-teal-50 text-teal-900 font-bold dark:border-teal-500 dark:bg-teal-950/60 dark:text-teal-200 shadow-xs"
+                        ? "border-amber-500 bg-amber-50 text-amber-950 font-bold dark:border-amber-500 dark:bg-amber-950/60 dark:text-amber-200 shadow-xs"
                         : "border-zinc-200 hover:bg-zinc-50 text-zinc-700 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-300"
                     )}
                   >
@@ -412,7 +412,7 @@ export default function SimulationPage() {
                     className={cn(
                       "flex flex-col items-center justify-center rounded-xl border p-2.5 text-center transition-all",
                       timeMode === item.id
-                        ? "border-teal-700 bg-teal-50 text-teal-900 font-bold dark:border-teal-500 dark:bg-teal-950/60 dark:text-teal-200 shadow-xs"
+                        ? "border-amber-500 bg-amber-50 text-amber-950 font-bold dark:border-amber-500 dark:bg-amber-950/60 dark:text-amber-200 shadow-xs"
                         : "border-zinc-200 hover:bg-zinc-50 text-zinc-700 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-300"
                     )}
                   >
@@ -429,7 +429,7 @@ export default function SimulationPage() {
                 type="button"
                 onClick={handleStartExam}
                 disabled={loadingQuestions}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-teal-800 active:scale-98 dark:bg-teal-600 dark:hover:bg-teal-700 disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] py-3.5 text-sm font-bold text-white shadow-sm shadow-orange-950/20 transition-all active:scale-98 disabled:opacity-50"
               >
                 {loadingQuestions ? (
                   <Loader2 size={18} className="animate-spin" />
@@ -451,7 +451,7 @@ export default function SimulationPage() {
           {/* Top Bar Fixa de Prova */}
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white p-3.5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex items-center gap-2.5">
-              <span className="rounded-lg bg-teal-700 px-2.5 py-1 text-xs font-bold text-white dark:bg-teal-600">
+              <span className="rounded-lg bg-gradient-to-r from-[#f59e0b] to-[#ea580c] px-2.5 py-1 text-xs font-bold text-white">
                 Q {currentIndex + 1} de {questions.length}
               </span>
 
@@ -560,17 +560,17 @@ export default function SimulationPage() {
                     className={cn(
                       "flex w-full items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition-all cursor-pointer sm:p-4",
                       isSelected
-                        ? "border-teal-700 bg-teal-50/80 text-teal-950 font-medium dark:border-teal-500 dark:bg-teal-950/40 dark:text-teal-100 shadow-2xs"
+                        ? "border-amber-500 bg-amber-50/80 text-amber-950 font-medium dark:border-amber-500 dark:bg-amber-950/40 dark:text-amber-100 shadow-2xs"
                         : isEliminated
                         ? "border-zinc-200 bg-zinc-100/50 text-zinc-400 opacity-50 line-through dark:border-zinc-800 dark:bg-zinc-900/30 dark:text-zinc-500"
-                        : "border-zinc-200 bg-white hover:border-teal-600 hover:bg-teal-50/30 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-teal-500"
+                        : "border-zinc-200 bg-white hover:border-amber-500 hover:bg-amber-50/30 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-amber-500/80"
                     )}
                   >
                     <span
                       className={cn(
                         "flex h-6 w-6 shrink-0 items-center justify-center rounded-md border text-xs font-bold transition-colors",
                         isSelected
-                          ? "border-teal-700 bg-teal-700 text-white dark:border-teal-500 dark:bg-teal-600"
+                          ? "border-orange-600 bg-orange-600 text-white dark:border-amber-500 dark:bg-amber-500"
                           : "border-zinc-200 bg-zinc-100 text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                       )}
                     >
@@ -622,7 +622,7 @@ export default function SimulationPage() {
                 <button
                   type="button"
                   onClick={() => setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1))}
-                  className="flex items-center gap-1.5 rounded-lg bg-teal-700 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+                  className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-orange-950/20"
                 >
                   <span>Próxima</span>
                   <ArrowRight size={14} />
@@ -631,7 +631,7 @@ export default function SimulationPage() {
                 <button
                   type="button"
                   onClick={() => setShowFinishConfirm(true)}
-                  className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700"
+                  className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#ea580c] to-[#c2410c] hover:from-[#c2410c] hover:to-[#9a3412] px-4 py-2 text-xs font-bold text-white shadow-sm shadow-orange-950/20"
                 >
                   <span>Revisar & Finalizar</span>
                   <CheckCircle2 size={14} />
@@ -658,7 +658,7 @@ export default function SimulationPage() {
 
                 <div className="mb-4 flex items-center gap-4 text-[11px] text-zinc-600 dark:text-zinc-400">
                   <div className="flex items-center gap-1">
-                    <span className="h-3 w-3 rounded bg-teal-700 dark:bg-teal-500" />
+                    <span className="h-3 w-3 rounded bg-orange-600 dark:bg-amber-500" />
                     <span>Respondida</span>
                   </div>
                   <div className="flex items-center gap-1">
@@ -691,7 +691,7 @@ export default function SimulationPage() {
                           isFlagged
                             ? "bg-amber-400 text-amber-950 font-bold"
                             : isAnswered
-                            ? "bg-teal-700 text-white dark:bg-teal-600"
+                            ? "bg-orange-600 text-white dark:bg-amber-500"
                             : "border border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-300"
                         )}
                       >
@@ -746,7 +746,7 @@ export default function SimulationPage() {
                     type="button"
                     onClick={handleFinishExam}
                     disabled={submittingExam}
-                    className="flex items-center gap-1.5 rounded-lg bg-teal-700 px-4 py-1.5 text-xs font-bold text-white hover:bg-teal-800"
+                    className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] px-4 py-1.5 text-xs font-bold text-white hover:opacity-95"
                   >
                     {submittingExam ? <Loader2 size={12} className="animate-spin" /> : null}
                     Confirmar Entrega
@@ -793,7 +793,7 @@ export default function SimulationPage() {
                   <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
                     Aproveitamento
                   </p>
-                  <p className="mt-0.5 text-2xl font-black text-teal-700 dark:text-teal-400">
+                  <p className="mt-0.5 text-2xl font-black text-orange-600 dark:text-amber-400">
                     {score.percentage}%
                   </p>
                 </div>
@@ -821,7 +821,7 @@ export default function SimulationPage() {
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <button
                   onClick={() => setStage("setup")}
-                  className="flex items-center gap-1.5 rounded-xl bg-teal-700 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-5 py-2.5 text-xs font-bold text-white shadow-sm shadow-orange-950/20"
                 >
                   <RotateCcw size={14} />
                   <span>Novo Simulado</span>

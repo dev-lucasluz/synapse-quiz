@@ -52,8 +52,8 @@ export function ReferralModal({ referralCode, used, max, onClose }: ReferralModa
 
         {/* Header */}
         <div className="mb-5">
-          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 dark:bg-teal-950">
-            <Share2 size={18} className="text-teal-700 dark:text-teal-400" />
+          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/60">
+            <Share2 size={18} className="text-orange-600 dark:text-amber-400" />
           </div>
           <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-50">
             Meta diária concluída!
@@ -76,9 +76,9 @@ export function ReferralModal({ referralCode, used, max, onClose }: ReferralModa
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400">limite atual</p>
           </div>
           {canEarnMore && (
-            <div className="flex-1 rounded-lg border border-teal-200 bg-teal-50 p-2.5 text-center dark:border-teal-900 dark:bg-teal-950">
-              <p className="text-lg font-bold tabular-nums text-teal-700 dark:text-teal-400">+5</p>
-              <p className="text-[11px] text-teal-700 dark:text-teal-400">por colega</p>
+            <div className="flex-1 rounded-lg border border-amber-200 bg-amber-50 p-2.5 text-center dark:border-amber-900/60 dark:bg-amber-950/60">
+              <p className="text-lg font-bold tabular-nums text-orange-600 dark:text-amber-400">+5</p>
+              <p className="text-[11px] text-orange-700 dark:text-amber-400">por colega</p>
             </div>
           )}
         </div>
@@ -106,7 +106,7 @@ export function ReferralModal({ referralCode, used, max, onClose }: ReferralModa
             className={cn(
               "flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-all",
               copied
-                ? "border-teal-300 bg-teal-50 text-teal-700 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-400"
+                ? "border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-300"
                 : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
             )}
           >

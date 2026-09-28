@@ -188,7 +188,7 @@ export default function ProfilePage() {
           </p>
           <button
             onClick={() => fetchProfile()}
-            className="mt-4 rounded-xl bg-teal-700 px-4 py-2 text-xs font-semibold text-white"
+            className="mt-4 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-orange-950/20"
           >
             Tentar novamente
           </button>

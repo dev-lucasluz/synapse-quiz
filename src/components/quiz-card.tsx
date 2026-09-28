@@ -284,7 +284,7 @@ export function QuizCard({
       if (isEliminated) {
         return "border-zinc-200 bg-zinc-100/60 text-zinc-400 opacity-50 line-through dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-500 hover:opacity-75";
       }
-      return "border-zinc-200 bg-white text-zinc-900 hover:border-teal-600 hover:bg-teal-50/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-teal-500 dark:hover:bg-teal-950/30 cursor-pointer";
+      return "border-zinc-200 bg-white text-zinc-900 hover:border-amber-500 hover:bg-amber-50/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-amber-500/80 dark:hover:bg-amber-950/30 cursor-pointer";
     }
 
     if (!result) {
@@ -302,7 +302,7 @@ export function QuizCard({
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           <span className="flex items-center gap-1 rounded-full border border-zinc-200 bg-white px-2.5 py-0.5 font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200">
-            <GraduationCap size={12} className="text-teal-700 dark:text-teal-400" />
+            <GraduationCap size={12} className="text-orange-600 dark:text-amber-400" />
             {question.subject}
           </span>
           <span className="flex items-center gap-1 rounded-full border border-zinc-200 bg-white px-2.5 py-0.5 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
@@ -313,7 +313,7 @@ export function QuizCard({
             <Clock size={12} className="text-zinc-400" />
             {question.year}
           </span>
-          <span className="flex items-center gap-1 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-0.5 font-medium text-teal-700 dark:border-teal-800 dark:bg-teal-950/70 dark:text-teal-300">
+          <span className="flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 font-medium text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/70 dark:text-amber-300">
             {question.period}º Período
           </span>
         </div>
@@ -491,7 +491,7 @@ export function QuizCard({
               className={cn(
                 "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
                 hasExistingNote
-                  ? "border-teal-300 bg-teal-50 text-teal-800 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-300"
+                  ? "border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
                   : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400"
               )}
               title="Anotar mnemônico ou resumo pessoal"
@@ -499,7 +499,7 @@ export function QuizCard({
               <FileEdit size={14} />
               <span>Anotações</span>
               {hasExistingNote && (
-                <span className="h-1.5 w-1.5 rounded-full bg-teal-600 dark:bg-teal-400" />
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
               )}
             </button>
           </div>
@@ -527,9 +527,9 @@ export function QuizCard({
 
       {/* Painel Expansível de Anotações Pessoais */}
       {showNotes && (
-        <div className="rounded-xl border border-teal-200 bg-teal-50/50 p-4 shadow-xs dark:border-teal-900/60 dark:bg-teal-950/20">
+        <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-4 shadow-xs dark:border-amber-900/60 dark:bg-amber-950/20">
           <div className="mb-2 flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-teal-900 dark:text-teal-200">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-200">
               <FileEdit size={14} />
               <span>Minha Anotação Clínica & Mnemônico</span>
             </div>
@@ -544,7 +544,7 @@ export function QuizCard({
             onChange={(e) => setNoteContent(e.target.value)}
             placeholder="Ex: 'Lembrar da tríade de Virchow: estase, hipercoagulabilidade e lesão endotelial...'"
             rows={3}
-            className="w-full resize-y rounded-lg border border-teal-200 bg-white p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-teal-600 focus:outline-none dark:border-teal-900 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+            className="w-full resize-y rounded-lg border border-amber-200 bg-white p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:outline-none dark:border-amber-900/60 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
           />
           <div className="mt-2 flex items-center justify-end gap-2">
             <button
@@ -556,7 +556,7 @@ export function QuizCard({
             <button
               onClick={handleSaveNote}
               disabled={noteSaving || noteLoading}
-              className="flex items-center gap-1.5 rounded-lg bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+              className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors"
             >
               {noteSaving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
               Salvar Anotação
@@ -629,21 +629,21 @@ export function QuizCard({
               className={cn(
                 "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
                 hasExistingNote
-                  ? "border-teal-300 bg-teal-50 text-teal-800 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-300"
+                  ? "border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
                   : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
               )}
             >
               <FileEdit size={14} />
               <span>Anotação</span>
               {hasExistingNote && (
-                <span className="h-1.5 w-1.5 rounded-full bg-teal-600 dark:bg-teal-400" />
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
               )}
             </button>
           </div>
 
           <button
             onClick={onAnswered}
-            className="flex items-center gap-1.5 rounded-lg bg-teal-700 px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+            className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-orange-950/20 transition-all"
           >
             <span>Próxima Questão</span>
             <span className="text-[10px] opacity-75 hidden sm:inline">[Espaço]</span>
@@ -689,7 +689,7 @@ export function QuizCard({
                       className={cn(
                         "flex items-center gap-2.5 rounded-lg border p-2.5 cursor-pointer transition-colors",
                         reportReason === item.id
-                          ? "border-teal-700 bg-teal-50/70 font-semibold text-teal-900 dark:border-teal-600 dark:bg-teal-950/40 dark:text-teal-200"
+                          ? "border-amber-500 bg-amber-50/70 font-semibold text-amber-950 dark:border-amber-500 dark:bg-amber-950/40 dark:text-amber-200"
                           : "border-zinc-200 hover:bg-zinc-50 text-zinc-700 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-300"
                       )}
                     >
@@ -699,7 +699,7 @@ export function QuizCard({
                         value={item.id}
                         checked={reportReason === item.id}
                         onChange={(e) => setReportReason(e.target.value)}
-                        className="text-teal-700 focus:ring-teal-700"
+                        className="text-orange-600 focus:ring-amber-500"
                       />
                       <span>{item.label}</span>
                     </label>
@@ -716,7 +716,7 @@ export function QuizCard({
                   onChange={(e) => setReportComment(e.target.value)}
                   placeholder="Explique sua dúvida, fonte bibliográfica ou detalhe do erro..."
                   rows={3}
-                  className="w-full resize-none rounded-lg border border-zinc-200 p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-teal-700 focus:outline-none dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+                  className="w-full resize-none rounded-lg border border-zinc-200 p-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
                 />
               </div>
 

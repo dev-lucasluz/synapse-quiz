@@ -2,8 +2,24 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSession, setSessionCookie } from "@/lib/auth";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
+  // Rate limit: 5 attempts per 15 minutes per IP
+  const ip = getClientIp(request);
+  const limit = rateLimit(`login:${ip}`, 5, 15 * 60 * 1000);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      {
+        error: `Muitas tentativas de login. Tente novamente em ${limit.retryAfterSeconds} segundos.`,
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSeconds) },
+      }
+    );
+  }
+
   try {
     const { email, password } = await request.json();
 
@@ -53,9 +69,12 @@ export async function POST(request: Request) {
       err?.name === "PrismaClientInitializationError" ||
       err?.name === "PrismaClientKnownRequestError";
 
-    const errorMsg = isDbError
-      ? `Banco de dados: ${err?.message?.split("\n").pop() || "Erro de conexão. Verifique TURSO_DATABASE_URL na Vercel."}`
-      : "Erro interno do servidor";
+    const errorMsg =
+      process.env.NODE_ENV === "production"
+        ? "Erro ao conectar com o serviço de autenticação. Tente novamente mais tarde."
+        : isDbError
+        ? `Banco de dados: ${err?.message?.split("\n").pop() || "Erro de conexão. Verifique TURSO_DATABASE_URL."}`
+        : "Erro interno do servidor";
 
     return NextResponse.json({ error: errorMsg }, { status: 500 });
   }

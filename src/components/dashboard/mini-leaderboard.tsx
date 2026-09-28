@@ -69,7 +69,7 @@ export function MiniLeaderboard({
 
           <Link
             href="/ranking"
-            className="flex items-center gap-1 text-[11px] font-semibold text-teal-700 hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300 transition-colors"
+            className="flex items-center gap-1 text-[11px] font-semibold text-orange-600 hover:text-orange-700 dark:text-amber-400 dark:hover:text-amber-300 transition-colors"
           >
             <span>Ver ranking</span>
             <ArrowRight size={11} />
@@ -93,7 +93,7 @@ export function MiniLeaderboard({
                   className={cn(
                     "flex items-center justify-between rounded-lg p-2 transition-colors",
                     isUser
-                      ? "bg-teal-50/80 dark:bg-teal-950/40 ring-1 ring-teal-500/20"
+                      ? "bg-amber-50/80 dark:bg-amber-950/40 ring-1 ring-amber-500/20"
                       : "bg-zinc-50/70 hover:bg-zinc-100/70 dark:bg-zinc-800/40 dark:hover:bg-zinc-800/70"
                   )}
                 >
@@ -127,7 +127,7 @@ export function MiniLeaderboard({
                   </div>
 
                   <div className="flex items-center gap-1 rounded-md bg-white px-2 py-0.5 text-[11px] font-bold text-zinc-800 shadow-2xs dark:bg-zinc-700 dark:text-zinc-100 shrink-0">
-                    <Zap size={10} className="text-teal-600 dark:text-teal-400" />
+                    <Zap size={10} className="text-amber-500 dark:text-amber-400 fill-amber-500/30" />
                     <span>{student.xp} XP</span>
                   </div>
                 </div>
@@ -150,7 +150,7 @@ export function MiniLeaderboard({
           <span className="text-zinc-500 dark:text-zinc-400 text-[11px]">
             Sua colocação semanal:
           </span>
-          <span className="font-bold text-teal-700 dark:text-teal-400">
+          <span className="font-bold text-orange-600 dark:text-amber-400">
             #{currentUser.rank} • {currentUser.xp} XP
           </span>
         </div>

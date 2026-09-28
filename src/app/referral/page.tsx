@@ -54,7 +54,7 @@ export default function ReferralPage() {
       <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
         <Navbar />
         <div className="flex min-h-[60vh] items-center justify-center">
-          <div className="h-7 w-7 animate-spin rounded-full border-2 border-teal-700 border-t-transparent dark:border-teal-400" />
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-orange-600 border-t-transparent dark:border-amber-400" />
         </div>
       </div>
     );
@@ -71,8 +71,8 @@ export default function ReferralPage() {
       <main className="mx-auto max-w-2xl px-4 py-10">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 dark:bg-teal-950">
-            <Share2 size={20} className="text-teal-700 dark:text-teal-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/60">
+            <Share2 size={20} className="text-orange-600 dark:text-amber-400" />
           </div>
           <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             Programa Acadêmico de Indicação
@@ -93,8 +93,8 @@ export default function ReferralPage() {
           </div>
 
           <div className="flex flex-col items-center rounded-xl border border-zinc-200 bg-white p-4 text-center shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-            <Gift size={16} className="mb-1 text-teal-700 dark:text-teal-400" />
-            <p className="text-base font-bold tabular-nums text-teal-700 dark:text-teal-400">
+            <Gift size={16} className="mb-1 text-orange-600 dark:text-amber-400" />
+            <p className="text-base font-bold tabular-nums text-orange-600 dark:text-amber-400">
               +{bonusEarned} questões
             </p>
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Bônus Diário</p>
@@ -127,15 +127,15 @@ export default function ReferralPage() {
                   className={cn(
                     "flex flex-col items-center gap-1.5 rounded-xl border p-4 text-center transition-all",
                     isFilled
-                      ? "border-teal-300 bg-teal-50/70 dark:border-teal-900 dark:bg-teal-950/40"
+                      ? "border-amber-300 bg-amber-50/70 dark:border-amber-900/60 dark:bg-amber-950/40"
                       : "border-dashed border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
                   )}
                 >
                   <Users
                     size={18}
-                    className={isFilled ? "text-teal-700 dark:text-teal-400" : "text-zinc-400"}
+                    className={isFilled ? "text-orange-600 dark:text-amber-400" : "text-zinc-400"}
                   />
-                  <p className={cn("text-xs font-bold", isFilled ? "text-teal-800 dark:text-teal-300" : "text-zinc-500")}>
+                  <p className={cn("text-xs font-bold", isFilled ? "text-amber-800 dark:text-amber-300" : "text-zinc-500")}>
                     {isFilled ? "Indicação Confirmada" : `Vaga ${slot + 1} Aberta`}
                   </p>
                   <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
@@ -150,7 +150,7 @@ export default function ReferralPage() {
             {slotsLeft > 0 ? (
               <span>Restam <strong className="text-zinc-800 dark:text-zinc-200">{slotsLeft}</strong> vaga(s) para atingir a cota máxima de 20 questões diárias.</span>
             ) : (
-              <span className="font-semibold text-teal-700 dark:text-teal-400">Teto máximo de 20 questões por dia desbloqueado com sucesso!</span>
+              <span className="font-semibold text-orange-600 dark:text-amber-400">Teto máximo de 20 questões por dia desbloqueado com sucesso!</span>
             )}
           </div>
         </div>
@@ -176,7 +176,7 @@ export default function ReferralPage() {
               className={cn(
                 "flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-all",
                 copied
-                  ? "border-teal-300 bg-teal-50 text-teal-700 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-400"
+                  ? "border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-300"
                   : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
               )}
             >
@@ -187,7 +187,7 @@ export default function ReferralPage() {
 
           <button
             onClick={shareLink}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-teal-700 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] py-2.5 text-xs font-semibold text-white shadow-sm shadow-orange-950/20 transition-all"
           >
             <Share2 size={13} />
             Compartilhar Link com Colegas

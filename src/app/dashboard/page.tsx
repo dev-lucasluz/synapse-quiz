@@ -93,9 +93,9 @@ function QuotaCard({
         <div className="flex items-center gap-3">
           <div className={cn(
             "flex h-9 w-9 items-center justify-center rounded-lg",
-            accent ? "bg-teal-50 dark:bg-teal-950" : "bg-zinc-100 dark:bg-zinc-800"
+            accent ? "bg-amber-50 dark:bg-amber-950/40" : "bg-zinc-100 dark:bg-zinc-800"
           )}>
-            <Icon size={16} className={accent ? "text-teal-700 dark:text-teal-400" : "text-zinc-600 dark:text-zinc-300"} />
+            <Icon size={16} className={accent ? "text-orange-600 dark:text-amber-400" : "text-zinc-600 dark:text-zinc-300"} />
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
@@ -114,7 +114,7 @@ function QuotaCard({
           full
             ? "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
             : accent
-            ? "bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-400 border border-teal-100 dark:border-teal-900"
+            ? "bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-200 dark:border-amber-900"
             : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700"
         )}>
           {pct}%
@@ -126,7 +126,7 @@ function QuotaCard({
         <div
           className={cn(
             "h-full rounded-full transition-all duration-700",
-            full ? "bg-zinc-300 dark:bg-zinc-600" : accent ? "bg-teal-700" : "bg-zinc-700 dark:bg-zinc-400"
+            full ? "bg-zinc-300 dark:bg-zinc-600" : accent ? "bg-gradient-to-r from-amber-500 to-orange-500" : "bg-zinc-700 dark:bg-zinc-400"
           )}
           style={{ width: `${pct}%` }}
         />
@@ -141,7 +141,7 @@ function QuotaCard({
         className={cn(
           "mt-auto flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-semibold tracking-wide shadow-xs transition-colors",
           accent
-            ? "bg-teal-700 text-white hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+            ? "bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] text-white hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] shadow-sm shadow-orange-950/20"
             : "border border-zinc-200 bg-white text-zinc-800 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         )}
       >
@@ -295,29 +295,39 @@ export default function DashboardPage() {
             href="/notebook"
             buttonLabel="Revisar Caderno"
           />
-          <div className="flex flex-col justify-between rounded-xl border border-teal-200 bg-white p-5 shadow-xs dark:border-teal-900/60 dark:bg-zinc-900">
-            <div>
-              <div className="mb-3 flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-400">
+          <div className="flex flex-col rounded-xl border border-amber-200 bg-white p-5 shadow-xs dark:border-amber-900/60 dark:bg-zinc-900">
+            {/* Header */}
+            <div className="mb-4 flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-orange-600 dark:bg-amber-950/60 dark:text-amber-400">
                   <Target size={16} />
                 </div>
-                <span className="rounded-full bg-teal-700 px-2 py-0.5 text-[10px] font-bold uppercase text-white dark:bg-teal-600">
-                  PRO
-                </span>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-orange-600 dark:text-amber-400">
+                    Simulado Cronometrado
+                  </p>
+                  <p className="mt-0.5 text-xl font-bold text-zinc-900 dark:text-zinc-50">
+                    Ambiente de Prova
+                  </p>
+                </div>
               </div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                Simulado Cronometrado
-              </p>
-              <p className="mt-1 text-sm font-bold text-zinc-900 dark:text-zinc-50">
-                Ambiente de Prova
-              </p>
-              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                10 a 30 questões com timer estilo ENARE e residência.
-              </p>
+              <span className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2.5 py-0.5 text-[10px] font-bold uppercase text-white">
+                PRO
+              </span>
             </div>
+
+            {/* Accent bar */}
+            <div className="mb-1.5 h-1.5 w-full overflow-hidden rounded-full bg-amber-100 dark:bg-amber-950/60">
+              <div className="h-full w-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500" />
+            </div>
+            <p className="mb-5 text-xs text-zinc-500 dark:text-zinc-300">
+              10 a 30 questões com timer estilo ENARE e residência.
+            </p>
+
+            {/* CTA */}
             <Link
               href="/simulation"
-              className="mt-4 flex items-center justify-center gap-1.5 rounded-lg bg-teal-700 py-2 text-xs font-bold text-white shadow-2xs transition-colors hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+              className="mt-auto flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] py-2.5 text-xs font-semibold tracking-wide text-white shadow-sm shadow-orange-950/20 transition-all"
             >
               <span>{user.plan === "pro" ? "Iniciar Simulado" : "Abrir Simulado"}</span>
               <ArrowRight size={13} />

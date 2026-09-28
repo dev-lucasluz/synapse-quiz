@@ -61,9 +61,9 @@ export function WeeklyChart({ data, className }: WeeklyChartProps) {
                 style={{
                   height: `${Math.max(heightPct, hasData ? 6 : 0)}%`,
                   backgroundColor: isToday
-                    ? "#0f766e" // teal-700
+                    ? "#ea580c" // sunset orange
                     : hasData
-                    ? "#5eead4" // teal-300 (bem visível no branco)
+                    ? "#fb923c" // sunset amber/orange
                     : "transparent",
                   borderWidth: isToday ? 0 : hasData ? 0 : 1,
                   borderStyle: "dashed",
@@ -75,7 +75,7 @@ export function WeeklyChart({ data, className }: WeeklyChartProps) {
               {/* Day Label */}
               <span className={`text-[11px] font-medium tabular-nums ${
                 isToday
-                  ? "text-teal-700 dark:text-teal-400 font-bold"
+                  ? "text-orange-600 dark:text-amber-400 font-bold"
                   : "text-zinc-600 dark:text-zinc-400"
               }`}>
                 {day.label}
@@ -88,11 +88,11 @@ export function WeeklyChart({ data, className }: WeeklyChartProps) {
       {/* Legend */}
       <div className="mt-4 flex items-center gap-5 border-t border-zinc-100 pt-3 dark:border-zinc-800">
         <div className="flex items-center gap-2">
-          <div className="h-2.5 w-3.5 rounded-xs" style={{ backgroundColor: "#0f766e" }} />
+          <div className="h-2.5 w-3.5 rounded-xs" style={{ backgroundColor: "#ea580c" }} />
           <span className="text-[11px] text-zinc-600 dark:text-zinc-400 font-medium">Hoje</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-2.5 w-3.5 rounded-xs" style={{ backgroundColor: "#5eead4" }} />
+          <div className="h-2.5 w-3.5 rounded-xs" style={{ backgroundColor: "#fb923c" }} />
           <span className="text-[11px] text-zinc-600 dark:text-zinc-400 font-medium">Dias anteriores</span>
         </div>
         <div className="flex items-center gap-2">

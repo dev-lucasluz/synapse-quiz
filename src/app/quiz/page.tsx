@@ -161,7 +161,7 @@ function QuizContent() {
   function QuotaDots({ used, max }: { used: number; max: number }) {
     if (data?.plan === "pro") {
       return (
-        <div className="flex items-center gap-1.5 text-[11px] font-medium text-teal-700 dark:text-teal-400">
+        <div className="flex items-center gap-1.5 text-[11px] font-medium text-orange-600 dark:text-amber-400">
           <Sparkles size={12} /> Cota Ilimitada Ativa
         </div>
       );
@@ -175,7 +175,7 @@ function QuizContent() {
             className={cn(
               "h-1.5 w-1.5 rounded-full transition-all duration-300",
               i < used
-                ? "bg-teal-700 dark:bg-teal-500"
+                ? "bg-gradient-to-r from-amber-500 to-orange-500"
                 : "bg-zinc-200 dark:bg-zinc-700"
             )}
           />
@@ -207,7 +207,7 @@ function QuizContent() {
           {/* Barra Unificada de Seleção de Disciplina */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white p-3 shadow-2xs dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-400">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50 text-orange-600 dark:bg-amber-950/60 dark:text-amber-400">
                 <Brain size={15} />
               </div>
               <div>
@@ -225,7 +225,7 @@ function QuizContent() {
               <select
                 value={selectedSubjectId}
                 onChange={(e) => handleSubjectChange(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-zinc-200 bg-zinc-50/70 py-2 pl-3 pr-8 text-xs font-medium text-zinc-800 shadow-2xs outline-none transition-colors focus:border-teal-700 focus:bg-white focus:ring-1 focus:ring-teal-700 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:focus:bg-zinc-800"
+                className="w-full appearance-none rounded-lg border border-zinc-200 bg-zinc-50/70 py-2 pl-3 pr-8 text-xs font-medium text-zinc-800 shadow-2xs outline-none transition-colors focus:border-amber-500 focus:bg-white focus:ring-1 focus:ring-amber-500/20 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:focus:bg-zinc-800"
               >
                 <option value="">📚 Todas as Matérias (Misto Geral)</option>
                 {periods.map((p) => {
@@ -253,15 +253,15 @@ function QuizContent() {
         {/* Loading state */}
         {loading && (
           <div className="flex min-h-[45vh] items-center justify-center">
-            <Loader2 size={28} className="animate-spin text-teal-700 dark:text-teal-400" />
+            <Loader2 size={28} className="animate-spin text-orange-600 dark:text-amber-400" />
           </div>
         )}
 
         {/* Progress Header */}
         {!loading && data && !data.limitReached && (
           <div className="mb-6 flex items-center gap-4 rounded-xl border border-zinc-200 bg-white px-4 py-3 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-50 dark:bg-teal-950">
-              <Brain size={16} className="text-teal-700 dark:text-teal-400" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-950/60">
+              <Brain size={16} className="text-orange-600 dark:text-amber-400" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="mb-1.5 flex items-center justify-between gap-2">
@@ -273,7 +273,7 @@ function QuizContent() {
                     : "Sessão Diária de Estudos"}
                 </p>
                 {data.plan === "pro" ? (
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 shrink-0">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-orange-600 dark:text-amber-400 shrink-0">
                     Acesso Ilimitado
                   </span>
                 ) : (
@@ -298,8 +298,8 @@ function QuizContent() {
         {/* Limit reached state */}
         {!loading && data?.limitReached && !showReferralModal && (
           <div className="flex flex-col items-center rounded-xl border border-zinc-200 bg-white px-6 py-12 text-center shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 dark:bg-teal-950">
-              <Brain size={24} className="text-teal-700 dark:text-teal-400" />
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/60">
+              <Brain size={24} className="text-orange-600 dark:text-amber-400" />
             </div>
 
             <h2 className="mb-1 text-base font-bold text-zinc-900 dark:text-zinc-50">
@@ -315,7 +315,7 @@ function QuizContent() {
             <div className="flex w-full max-w-xs flex-col gap-2.5">
               <button
                 onClick={() => setShowReferralModal(true)}
-                className="flex items-center justify-center gap-2 rounded-lg bg-teal-700 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+                className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] py-2.5 text-xs font-semibold text-white shadow-sm shadow-orange-950/20"
               >
                 Desbloquear +5 Questões Hoje
               </button>
@@ -349,7 +349,7 @@ export default function QuizPage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950">
-          <div className="h-7 w-7 animate-spin rounded-full border-2 border-teal-700 border-t-transparent dark:border-teal-400" />
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-orange-600 border-t-transparent dark:border-amber-400" />
         </div>
       }
     >

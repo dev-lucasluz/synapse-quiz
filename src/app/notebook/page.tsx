@@ -132,7 +132,7 @@ export default function NotebookPage() {
             </p>
             <Link
               href="/quiz"
-              className="flex items-center gap-1.5 rounded-lg bg-teal-700 px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700"
+              className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#c2410c] hover:from-[#d97706] hover:via-[#c2410c] hover:to-[#9a3412] px-4 py-2.5 text-xs font-semibold text-white shadow-sm shadow-orange-950/20 transition-all"
             >
               Iniciar Quiz Diário
               <ArrowRight size={13} />

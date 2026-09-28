@@ -1,0 +1,27 @@
+# Synapse Quiz
+
+> Plataforma inteligente de preparação para Residência Médica e ENARE com algoritmo de repetição espaçada SuperMemo-2 (SM-2), banco de questões comentadas e simulados cronometrados.
+
+## Sobre a Plataforma
+Synapse Quiz é um sistema de estudo médico baseado em evidências científicas cognitivas. A retenção a longo prazo é otimizada por meio de recuperação ativa (active recall) combinada com repetição espaçada adaptativa.
+
+## Suporte para Agentes de IA (Agent Readiness)
+Esta plataforma suporta negociação de conteúdo via HTTP (conforme a especificação [Accept Markdown](https://acceptmarkdown.com/)):
+- Para receber a representação dos recursos em formato Markdown, inclua o cabeçalho: \`Accept: text/markdown\`.
+- Todas as rotas suportam negociação de conteúdo com o cabeçalho \`Vary: Accept\`.
+- Rotas inexistentes retornam status HTTP 404 com corpo em Markdown e links para recuperação.
+
+## Páginas Principais
+- [Página Inicial](https://synapsequiz.vercel.app/): Visão geral da plataforma, metodologia e áreas médicas.
+- [Dashboard](https://synapsequiz.vercel.app/dashboard): Painel do estudante com fila diária de revisões, metas semanais e taxa de acerto.
+- [Login](https://synapsequiz.vercel.app/login): Acesso à conta existente.
+- [Cadastro](https://synapsequiz.vercel.app/register): Criação de nova conta gratuita de estudante.
+- [Questões](https://synapsequiz.vercel.app/quiz): Sessão ativa de resolução de casos clínicos com gabarito comentado.
+- [Caderno de Erros](https://synapsequiz.vercel.app/notebook): Revisão focalizada de questões com dúvidas ou erros.
+- [Simulados](https://synapsequiz.vercel.app/simulation): Provas cronometradas no modelo ENARE e grandes bancas de Residência.
+- [Indicação](https://synapsequiz.vercel.app/referral): Programa de indicações para expansão de cotas diárias de resolução.
+
+## Metadados e Sitemap
+- Sitemap: [https://synapsequiz.vercel.app/sitemap.xml](https://synapsequiz.vercel.app/sitemap.xml)
+- Robots: [https://synapsequiz.vercel.app/robots.txt](https://synapsequiz.vercel.app/robots.txt)
+- LLMs Documentation: [https://synapsequiz.vercel.app/llms.txt](https://synapsequiz.vercel.app/llms.txt)

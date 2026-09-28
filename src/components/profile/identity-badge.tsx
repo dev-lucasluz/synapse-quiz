@@ -39,7 +39,7 @@ export function IdentityBadge({ user, stats, onEditAvatar, className }: Identity
             size="xl"
             className={cn(
               "ring-4 transition-all duration-200 shadow-sm",
-              isPro ? "ring-teal-500/30 dark:ring-teal-400/30" : "ring-zinc-100 dark:ring-zinc-800"
+              isPro ? "ring-amber-500/30 dark:ring-amber-400/30" : "ring-zinc-100 dark:ring-zinc-800"
             )}
           />
           <button
@@ -60,7 +60,7 @@ export function IdentityBadge({ user, stats, onEditAvatar, className }: Identity
               {user.name}
             </h2>
             {isPro ? (
-              <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-[10px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+              <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
                 Assinante PRO
               </span>
             ) : (
@@ -70,7 +70,7 @@ export function IdentityBadge({ user, stats, onEditAvatar, className }: Identity
                 </span>
                 <a
                   href="#plano-pro"
-                  className="inline-flex items-center gap-1 rounded-full border border-teal-200/80 bg-teal-50/80 px-2 py-0.5 text-[10px] font-semibold text-teal-700 hover:bg-teal-100 dark:border-teal-900/60 dark:bg-teal-950/50 dark:text-teal-400 transition-colors"
+                  className="inline-flex items-center gap-1 rounded-full border border-amber-200/80 bg-amber-50/80 px-2 py-0.5 text-[10px] font-semibold text-orange-600 hover:bg-amber-100 dark:border-amber-900/60 dark:bg-amber-950/50 dark:text-amber-300 transition-colors"
                 >
                   <span>Virar PRO</span>
                   <span aria-hidden="true">&rarr;</span>
@@ -87,20 +87,20 @@ export function IdentityBadge({ user, stats, onEditAvatar, className }: Identity
           <div className="mt-3 flex flex-wrap items-center justify-center sm:justify-start gap-2">
             {user.college ? (
               <div className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200/80 bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300">
-                <Building2 size={13} className="text-teal-600 dark:text-teal-400" />
+                <Building2 size={13} className="text-orange-600 dark:text-amber-400" />
                 <span>{user.college}</span>
               </div>
             ) : null}
 
             {user.period ? (
               <div className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200/80 bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300">
-                <GraduationCap size={13} className="text-teal-600 dark:text-teal-400" />
+                <GraduationCap size={13} className="text-orange-600 dark:text-amber-400" />
                 <span>{user.period}</span>
               </div>
             ) : null}
 
             {user.targetSpecialty ? (
-              <div className="inline-flex items-center gap-1.5 rounded-lg border border-teal-200/60 bg-teal-50/60 px-2.5 py-1 text-xs font-medium text-teal-800 dark:border-teal-900/60 dark:bg-teal-950/40 dark:text-teal-300">
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200/60 bg-amber-50/60 px-2.5 py-1 text-xs font-medium text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300">
                 <Stethoscope size={13} />
                 <span>Foco: {user.targetSpecialty}</span>
               </div>
@@ -130,7 +130,7 @@ export function IdentityBadge({ user, stats, onEditAvatar, className }: Identity
 
         {/* Questões Feitas */}
         <div className="flex flex-col items-center sm:items-start rounded-xl bg-zinc-50/80 p-3 dark:bg-zinc-800/40">
-          <div className="flex items-center gap-1.5 text-teal-600 dark:text-teal-400">
+          <div className="flex items-center gap-1.5 text-orange-600 dark:text-amber-400">
             <Target size={15} />
             <span className="text-[11px] font-semibold text-zinc-600 dark:text-zinc-400">Resolvidas</span>
           </div>

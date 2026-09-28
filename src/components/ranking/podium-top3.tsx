@@ -58,7 +58,7 @@ export function PodiumTop3({ top3 }: PodiumTop3Props) {
           </p>
 
           <div className="mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-bold text-zinc-800 shadow-2xs dark:bg-zinc-700 dark:text-zinc-100">
-            <Zap size={11} className="text-teal-600 dark:text-teal-400" />
+            <Zap size={11} className="text-amber-500 dark:text-amber-400 fill-amber-500/30" />
             <span>{second.xp} XP</span>
           </div>
         </div>
@@ -127,7 +127,7 @@ export function PodiumTop3({ top3 }: PodiumTop3Props) {
           </p>
 
           <div className="mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-bold text-zinc-800 shadow-2xs dark:bg-zinc-700 dark:text-zinc-100">
-            <Zap size={11} className="text-teal-600 dark:text-teal-400" />
+            <Zap size={11} className="text-amber-500 dark:text-amber-400 fill-amber-500/30" />
             <span>{third.xp} XP</span>
           </div>
         </div>

@@ -79,7 +79,7 @@ export function AvatarRenderer({
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center font-bold bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300 shadow-2xs",
+        "flex shrink-0 items-center justify-center font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 shadow-2xs",
         sizeClasses,
         className
       )}
