@@ -6,7 +6,7 @@ import { normalizeEmail } from "@/lib/email-address";
  * Administradores são definidos pela variável ADMIN_EMAILS (e-mails separados por vírgula).
  * O usuário precisa estar logado e ter o e-mail verificado. Sem a variável, ninguém é admin.
  */
-function adminEmails(): string[] {
+export function getAdminEmails(): string[] {
   return (process.env.ADMIN_EMAILS || "")
     .split(",")
     .map((e) => normalizeEmail(e))
@@ -22,6 +22,6 @@ export async function requireAdmin(): Promise<{ userId: string; email: string } 
     select: { id: true, email: true, emailVerifiedAt: true },
   });
   if (!user || !user.emailVerifiedAt) return null;
-  if (!adminEmails().includes(normalizeEmail(user.email))) return null;
+  if (!getAdminEmails().includes(normalizeEmail(user.email))) return null;
   return { userId: user.id, email: user.email };
 }

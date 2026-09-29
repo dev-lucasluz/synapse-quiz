@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getAdminEmails } from "@/lib/admin";
+import { getRankingEpoch, streakDaysSinceEpoch } from "@/lib/ranking";
 
 export async function GET(req: NextRequest) {
   try {
@@ -28,6 +30,10 @@ export async function GET(req: NextRequest) {
       startDate.setHours(0, 0, 0, 0);
     }
 
+    // Reinício do ranking: nada anterior à data de corte conta (veja lib/ranking.ts).
+    const rankingEpoch = getRankingEpoch();
+    if (startDate < rankingEpoch) startDate = rankingEpoch;
+
     // ─── 2. Informações do usuário logado para filtros de escopo ─────────────
     let currentUserProfile: { college: string | null; period: string | null } | null = null;
     if (session?.userId) {
@@ -52,6 +58,10 @@ export async function GET(req: NextRequest) {
     } else if (periodParam) {
       userFilter.period = periodParam;
     }
+
+    // Contas de administração (ADMIN_EMAILS) não entram no ranking.
+    const adminEmails = getAdminEmails();
+    if (adminEmails.length > 0) userFilter.email = { notIn: adminEmails };
 
     const users = await prisma.user.findMany({
       where: userFilter,
@@ -106,7 +116,7 @@ export async function GET(req: NextRequest) {
         user: u,
         correctCount: 0,
         totalCount: 0,
-        streakBonus: Math.min((u.streakCount || 0) * 5, 35),
+        streakBonus: Math.min(streakDaysSinceEpoch(u.streakCount || 0, now) * 5, 35),
       });
     }
 
