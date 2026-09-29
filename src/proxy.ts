@@ -4,7 +4,7 @@ import { verifySession } from "@/lib/auth";
 import { prefersMarkdown } from "@/lib/content-negotiation";
 
 // Rotas que requerem autenticação para usuários de navegador (HTML)
-const PROTECTED_ROUTES = ["/dashboard", "/quiz", "/notebook", "/referral", "/simulation"];
+const PROTECTED_ROUTES = ["/dashboard", "/quiz", "/notebook", "/referral", "/simulation", "/admin"];
 
 // Rotas só para visitantes (redireciona autenticados para dashboard)
 const AUTH_ROUTES = ["/login", "/register"];

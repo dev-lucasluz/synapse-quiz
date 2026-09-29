@@ -15,6 +15,7 @@ import {
   X,
   Layers,
   ChevronDown,
+  Image as ImageIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -238,6 +239,36 @@ function QuizContent() {
                 className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400"
               />
             </div>
+          </div>
+
+          {/* Filtro: todas as questões x só questões com imagem */}
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Tipo de questão">
+            <button
+              type="button"
+              onClick={() => filter !== "all" && handleFilterChange("all")}
+              aria-pressed={filter === "all"}
+              className={cn(
+                "cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
+                filter === "all"
+                  ? "border-amber-500 bg-amber-500 text-white"
+                  : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              )}
+            >
+              Todas as questões
+            </button>
+            <button
+              type="button"
+              onClick={() => filter !== "images" && handleFilterChange("images")}
+              aria-pressed={filter === "images"}
+              className={cn(
+                "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
+                filter === "images"
+                  ? "border-amber-500 bg-amber-500 text-white"
+                  : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              )}
+            >
+              <ImageIcon size={13} /> Só questões com imagem
+            </button>
           </div>
         </div>
 

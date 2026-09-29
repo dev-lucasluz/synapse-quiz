@@ -105,3 +105,46 @@ export async function sendPasswordResetEmail(to: string, name: string, token: st
   const text = `Olá, ${name}!\n\nPara redefinir sua senha (link válido por 30 minutos):\n${link}\n\nSe você não pediu isso, ignore esta mensagem.`;
   return sendMail(to, "Redefinir senha — Synapse Quiz", html, text);
 }
+
+const REPORT_REASON_LABELS: Record<string, string> = {
+  gabarito_errado: "Gabarito errado",
+  desatualizado: "Conteúdo desatualizado",
+  erro_digitacao: "Erro de digitação",
+  outro: "Outro",
+};
+
+export function reportReasonLabel(reason: string): string {
+  return REPORT_REASON_LABELS[reason] ?? reason;
+}
+
+/**
+ * Avisa a equipe quando um aluno reporta um problema em uma questão.
+ * Destino: REPORTS_NOTIFY_EMAIL, ou o próprio SMTP_USER se não definido.
+ */
+export async function sendReportNotification(params: {
+  questionText: string;
+  subject: string;
+  reason: string;
+  comment: string | null;
+  reporterName: string;
+  reporterEmail: string;
+}): Promise<boolean> {
+  const to = process.env.REPORTS_NOTIFY_EMAIL || process.env.SMTP_USER;
+  if (!to) return false;
+
+  const snippet = params.questionText.length > 300 ? params.questionText.slice(0, 300) + "…" : params.questionText;
+  const link = `${getAppUrl()}/admin/reports`;
+  const label = reportReasonLabel(params.reason);
+  const html = `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#f4f4f5;font-family:Arial,Helvetica,sans-serif;color:#18181b">
+<div style="max-width:520px;margin:0 auto;padding:24px"><div style="background:#fff;border-radius:16px;padding:28px;border:1px solid #e4e4e7">
+<p style="margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:1px;color:#ea580c">SYNAPSE QUIZ · REPORT</p>
+<h1 style="margin:0 0 16px;font-size:18px">Novo report: ${escapeHtml(label)}</h1>
+<p style="margin:0 0 6px;font-size:13px"><b>Matéria:</b> ${escapeHtml(params.subject)}</p>
+<p style="margin:0 0 6px;font-size:13px"><b>Questão:</b> ${escapeHtml(snippet)}</p>
+<p style="margin:0 0 6px;font-size:13px"><b>Comentário do aluno:</b> ${params.comment ? escapeHtml(params.comment) : "<i>(sem comentário)</i>"}</p>
+<p style="margin:0 0 18px;font-size:13px"><b>Enviado por:</b> ${escapeHtml(params.reporterName)} (${escapeHtml(params.reporterEmail)})</p>
+<a href="${link}" style="display:inline-block;background:#ea580c;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:12px">Abrir reports</a>
+</div></div></body></html>`;
+  const text = `Novo report: ${label}\nMatéria: ${params.subject}\nQuestão: ${snippet}\nComentário: ${params.comment ?? "(sem comentário)"}\nEnviado por: ${params.reporterName} (${params.reporterEmail})\n\nAbrir: ${link}`;
+  return sendMail(to, `Report de questão — ${label}`, html, text);
+}

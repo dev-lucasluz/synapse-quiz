@@ -28,6 +28,14 @@ export async function GET() {
     include: { question: { select: { subjectId: true } } },
   });
 
+  // Quantas questões com imagem cada matéria tem (para o filtro "só com imagem").
+  const imageCounts = await prisma.question.groupBy({
+    by: ["subjectId"],
+    where: { isActive: true, imageUrl: { not: null } },
+    _count: { _all: true },
+  });
+  const imagesBySubject = new Map(imageCounts.map((r) => [r.subjectId, r._count._all]));
+
   const reviewedBySubject = new Map<string, number>();
   for (const review of userReviews) {
     const sid = review.question.subjectId;
@@ -41,6 +49,7 @@ export async function GET() {
     category: s.category,
     totalQuestions: s._count.questions,
     reviewedQuestions: reviewedBySubject.get(s.id) ?? 0,
+    imageQuestions: imagesBySubject.get(s.id) ?? 0,
     subtopics: s.questions.map((q) => q.subtopic).filter(Boolean) as string[],
   }));
 

@@ -15,6 +15,7 @@ import {
   Layers,
   ArrowRight,
   RefreshCw,
+  Image as ImageIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { EmailVerifyBanner } from "@/components/email-verify-banner";
@@ -57,6 +58,7 @@ interface SubjectData {
   category: string;
   totalQuestions: number;
   reviewedQuestions: number;
+  imageQuestions?: number;
 }
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -338,6 +340,23 @@ export default function DashboardPage() {
             </Link>
           </div>
         </section>
+
+        {/* ── Atalho: questões com imagem ──────────────────────────────────── */}
+        <Link
+          href="/quiz?filter=images"
+          className="mb-8 -mt-4 flex items-center gap-4 rounded-xl border border-amber-200 bg-white p-4 shadow-xs transition-colors hover:border-amber-400 dark:border-amber-900/60 dark:bg-zinc-900 dark:hover:border-amber-700"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-orange-600 dark:bg-amber-950/60 dark:text-amber-400">
+            <ImageIcon size={18} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Questões com imagem</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              ECG, radiografias, lâminas, gráficos e fotos clínicas. Não travam na cota diária.
+            </p>
+          </div>
+          <ArrowRight size={16} className="shrink-0 text-zinc-400" />
+        </Link>
 
         {/* ── Métricas Semanais ────────────────────────────────────────────── */}
         <section className="mb-8">

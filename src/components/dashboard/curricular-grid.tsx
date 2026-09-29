@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen, Image as ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Subject {
@@ -11,6 +11,7 @@ interface Subject {
   category: string;
   totalQuestions: number;
   reviewedQuestions: number;
+  imageQuestions?: number;
 }
 
 interface CurricularGridProps {
@@ -24,7 +25,8 @@ const CATEGORY_COLORS: Record<string, { dot: string; text: string }> = {
   "Internato": { dot: "bg-emerald-500", text: "text-emerald-700 dark:text-emerald-400" },
 };
 
-function SubjectCard({ subject }: { subject: Subject }) {
+function SubjectCard({ subject, imagesOnly }: { subject: Subject; imagesOnly: boolean }) {
+  const imageCount = subject.imageQuestions ?? 0;
   const pct = subject.totalQuestions > 0
     ? Math.round((subject.reviewedQuestions / subject.totalQuestions) * 100)
     : 0;
@@ -47,11 +49,13 @@ function SubjectCard({ subject }: { subject: Subject }) {
 
       {/* Stats */}
       <div className="mb-3 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-        <BookOpen size={12} className="text-zinc-400" />
+        {imagesOnly ? <ImageIcon size={12} className="text-amber-500" /> : <BookOpen size={12} className="text-zinc-400" />}
         <span>
-          {subject.totalQuestions} questão{subject.totalQuestions !== 1 ? "s" : ""}
+          {imagesOnly
+            ? `${imageCount} ${imageCount === 1 ? "questão" : "questões"} com imagem`
+            : `${subject.totalQuestions} ${subject.totalQuestions === 1 ? "questão" : "questões"}`}
         </span>
-        {subject.reviewedQuestions > 0 && (
+        {!imagesOnly && subject.reviewedQuestions > 0 && (
           <>
             <span className="text-zinc-300 dark:text-zinc-600">•</span>
             <span>{subject.reviewedQuestions} revisadas</span>
@@ -70,11 +74,11 @@ function SubjectCard({ subject }: { subject: Subject }) {
       {/* Button */}
       <button
         onClick={() => {
-          window.location.href = `/quiz?subjectId=${encodeURIComponent(subject.id)}`;
+          window.location.href = `/quiz?subjectId=${encodeURIComponent(subject.id)}${imagesOnly ? "&filter=images" : ""}`;
         }}
         className="mt-auto flex items-center justify-between rounded-lg border border-zinc-200 bg-zinc-50/70 px-3 py-2 text-xs font-semibold text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-300 dark:hover:bg-zinc-800"
       >
-        <span>Praticar Disciplina</span>
+        <span>{imagesOnly ? "Praticar questões com imagem" : "Praticar Disciplina"}</span>
         <ArrowRight size={12} className="text-zinc-400 transition-transform group-hover:translate-x-0.5" />
       </button>
     </div>
@@ -83,6 +87,7 @@ function SubjectCard({ subject }: { subject: Subject }) {
 
 export function CurricularGrid({ subjects }: CurricularGridProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [imagesOnly, setImagesOnly] = useState(false);
 
   const categories = [
     { id: "all", label: "Todas as Matérias" },
@@ -92,9 +97,11 @@ export function CurricularGrid({ subjects }: CurricularGridProps) {
     })),
   ];
 
-  const filtered = activeCategory === "all"
+  const byCategory = activeCategory === "all"
     ? subjects
     : subjects.filter((s) => s.category === activeCategory);
+  // No modo "só com imagem", mostra apenas as matérias que têm questões com imagem.
+  const filtered = imagesOnly ? byCategory.filter((s) => (s.imageQuestions ?? 0) > 0) : byCategory;
 
   return (
     <div>
@@ -114,6 +121,21 @@ export function CurricularGrid({ subjects }: CurricularGridProps) {
             {cat.label}
           </button>
         ))}
+
+        {/* Filtro independente: só questões com imagem */}
+        <button
+          type="button"
+          onClick={() => setImagesOnly((v) => !v)}
+          aria-pressed={imagesOnly}
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors",
+            imagesOnly
+              ? "border-amber-500 bg-amber-500 text-white"
+              : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:text-zinc-200"
+          )}
+        >
+          <ImageIcon size={13} /> Só com imagem
+        </button>
       </div>
 
       {/* Grid */}
@@ -125,7 +147,7 @@ export function CurricularGrid({ subjects }: CurricularGridProps) {
       ) : (
         <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((subject) => (
-            <SubjectCard key={subject.id} subject={subject} />
+            <SubjectCard key={subject.id} subject={subject} imagesOnly={imagesOnly} />
           ))}
         </div>
       )}
