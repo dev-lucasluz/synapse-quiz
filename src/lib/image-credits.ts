@@ -47,11 +47,11 @@ export const IMAGE_CREDITS: ImageCredit[] = [
   },
   {
     "file": "/images/clinical/usg_hidronefrose.jpg",
-    "title": "Ultrasound of right kidney moderate hydronephrosis",
-    "author": "Cerevisae",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ultrasound_of_right_kidney_moderate_hydronephrosis.jpg"
+    "title": "Ultrasonography of hydronephrosis due to ureteropelvic junction obstruction",
+    "author": "Kristoffer Lindskov Hansen, Michael Bachmann Nielsen e Caroline Ewertsen",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ultrasonography_of_hydronephrosis_due_to_ureteropelvic_junction_obstruction.jpg"
   },
   {
     "file": "/images/clinical/rm_sagital_cerebro.jpg",
@@ -63,7 +63,7 @@ export const IMAGE_CREDITS: ImageCredit[] = [
   },
   {
     "file": "/images/clinical/anat_valva_aortica.png",
-    "title": "Gray497",
+    "title": "Gray 497 (Anatomia de Gray, 1918) — rótulos traduzidos para o português",
     "author": "Henry Vandyke Carter",
     "license": "Public domain",
     "licenseUrl": "",
@@ -172,62 +172,6 @@ export const IMAGE_CREDITS: ImageCredit[] = [
     "license": "CC BY 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hyperkalemia_ECG.jpg"
-  },
-  {
-    "file": "/images/clinical/bioq_inibicao.jpg",
-    "title": "Inhibition-types",
-    "author": "Athel cb",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Inhibition-types.jpg"
-  },
-  {
-    "file": "/images/clinical/bioq_michaelis.png",
-    "title": "MM curve",
-    "author": "TimVickers",
-    "license": "Public domain",
-    "licenseUrl": "",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:MM_curve.png"
-  },
-  {
-    "file": "/images/clinical/farma_antagonista.jpg",
-    "title": "Dose response antagonist",
-    "author": "Dylan2106",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dose_response_antagonist.jpg"
-  },
-  {
-    "file": "/images/clinical/farma_agonista_parcial.png",
-    "title": "Dose Response Curve of Opioid Antagonists Compared to Opioid Agonists",
-    "author": "Xx684xx",
-    "license": "CC0",
-    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dose_Response_Curve_of_Opioid_Antagonists_Compared_to_Opioid_Agonists.png"
-  },
-  {
-    "file": "/images/clinical/sc_piramide.png",
-    "title": "Population pyramid of Brazil 2015",
-    "author": "The Central Intelligence Agency.",
-    "license": "Public domain",
-    "licenseUrl": "",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Population_pyramid_of_Brazil_2015.png"
-  },
-  {
-    "file": "/images/clinical/sc_km.jpg",
-    "title": "Km plot",
-    "author": "Deanne Taylor (made and original to submitter)",
-    "license": "Public domain",
-    "licenseUrl": "",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Km_plot.jpg"
-  },
-  {
-    "file": "/images/clinical/sc_curva_epidemica.jpg",
-    "title": "Epi Curve 2018 US Salmonella Outbreak",
-    "author": "CDC",
-    "license": "Public domain",
-    "licenseUrl": "",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Epi_Curve_2018_US_Salmonella_Outbreak.jpg"
   },
   {
     "file": "/images/clinical/sem_zoster.jpg",

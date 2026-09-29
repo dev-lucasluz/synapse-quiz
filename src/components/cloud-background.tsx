@@ -1,27 +1,31 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CloudShader } from "@/components/ui/cloud-shader";
 import { useTheme } from "@/components/theme-provider";
+
+/**
+ * Fundo de céu com nuvens leves: imagens pré-renderizadas que flutuam devagar via CSS
+ * (transform, animado pelo compositor do navegador, sem JavaScript e sem WebGL).
+ * Substitui o antigo shader de nuvens, que travava a página em celulares e sem GPU.
+ * A animação é desligada para quem prefere movimento reduzido (veja globals.css).
+ */
+const CLOUDS = [
+  { src: "/images/sky/cloud-1.webp", top: "4%", width: "64vw", duration: 190, delay: -60, opacity: 0.55 },
+  { src: "/images/sky/cloud-2.webp", top: "26%", width: "46vw", duration: 260, delay: -170, opacity: 0.5 },
+  { src: "/images/sky/cloud-3.webp", top: "50%", width: "72vw", duration: 320, delay: -100, opacity: 0.45 },
+  { src: "/images/sky/cloud-2.webp", top: "72%", width: "42vw", duration: 230, delay: -30, opacity: 0.4 },
+];
 
 export function CloudBackground() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [showClouds, setShowClouds] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Só inicia o WebGL depois do primeiro paint, para não bloquear o carregamento.
-    const start = () => setShowClouds(true);
-    if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(start, { timeout: 1500 });
-      return () => window.cancelIdleCallback(id);
-    }
-    const id = window.setTimeout(start, 300);
-    return () => window.clearTimeout(id);
   }, []);
 
   const isDark = mounted ? theme === "dark" : false;
+  const cloudColor = isDark ? "#1c1c2e" : "#ffffff";
 
   return (
     <div
@@ -31,18 +35,24 @@ export function CloudBackground() {
         backgroundColor: isDark ? "#080813" : "#A0BDDB",
       }}
     >
-      {/* Camada 1: Nuvens aceternity passando ao fundo com 50% de opacidade */}
-      <div className="absolute inset-0 opacity-50">
-        {showClouds && (
-          <CloudShader
-            className="w-full h-full min-h-0"
-            speed={0.65}
-            count={5}
-            skyTopColor={isDark ? "#080813" : "#A0BDDB"}
-            skyBottomColor={isDark ? "#05050d" : "#8AAECB"}
-            cloudColor={isDark ? "#1c1c2e" : "#ffffff"}
+      {/* Camada 1: nuvens flutuando ao fundo */}
+      <div className="absolute inset-0">
+        {CLOUDS.map((c, i) => (
+          <div
+            key={i}
+            className="sky-cloud"
+            style={{
+              top: c.top,
+              width: c.width,
+              opacity: c.opacity,
+              backgroundColor: cloudColor,
+              animationDuration: `${c.duration}s`,
+              animationDelay: `${c.delay}s`,
+              WebkitMaskImage: `url(${c.src})`,
+              maskImage: `url(${c.src})`,
+            }}
           />
-        )}
+        ))}
       </div>
 
       {/* Camada 2: Gradiente difuso e vinheta de iluminação das imagens de referência */}

@@ -218,3 +218,29 @@ aside.bg-white {
   background-color: rgba(127, 29, 29, 0.35) !important;
   color: #fecaca !important;
 }
+/* ── Nuvens do fundo (leves: só transform, sem JavaScript) ─────────────────── */
+@keyframes sky-drift {
+  from { transform: translate3d(-75vw, 0, 0); }
+  to   { transform: translate3d(112vw, 0, 0); }
+}
+
+.sky-cloud {
+  position: absolute;
+  left: 0;
+  aspect-ratio: 8 / 3;
+  will-change: transform;
+  animation-name: sky-drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-cloud {
+    animation: none;
+    transform: translate3d(20vw, 0, 0);
+  }
+}

@@ -367,7 +367,7 @@ export const imageQuestionsBatch2: ImageQuestionSeed[] = [
   },
   {
     "subjectName": "Saúde Coletiva & Epidemiologia",
-    "text": "O gráfico apresenta curvas de Kaplan-Meier para dois grupos de pacientes (assinatura gênica A, em verde, e B, em vermelho), com pequenos traços verticais sobre as curvas. Assinale a alternativa correta sobre a interpretação da figura:",
+    "text": "O gráfico apresenta curvas de Kaplan-Meier para dois grupos de pacientes (grupo A, em verde, e grupo B, em vermelho; dados ilustrativos), com pequenos traços verticais sobre as curvas. Assinale a alternativa correta sobre a interpretação da figura:",
     "options": [
       "O grupo B tem melhor sobrevida, pois sua curva declina mais rapidamente.",
       "Os traços verticais representam indivíduos censurados, e a comparação estatística das curvas pode ser feita pelo teste de log-rank.",
