@@ -20,6 +20,7 @@ import {
   BookOpen,
   CheckCircle2,
 } from "lucide-react";
+import { SynapseMark, SynapseWordmark } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 
 function AuthContent() {
@@ -116,10 +117,8 @@ function AuthContent() {
     <main className="flex min-h-screen flex-col items-center justify-center p-3 sm:p-6 lg:p-8 font-heading">
       {/* Rótulo superior / Balão de branding */}
       <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60 select-none">
-        <Brain size={14} className="text-amber-500 dark:text-amber-400" />
-        <span className="text-xs font-bold tracking-wider text-zinc-800 dark:text-zinc-200">
-          SYNAPSE QUIZ
-        </span>
+        <SynapseMark className="h-[18px] w-auto" />
+        <SynapseWordmark className="h-[13px] w-auto text-zinc-800 dark:text-zinc-200" />
         <span className="text-[10px] text-zinc-400">•</span>
         <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
           Plataforma Médica
@@ -397,8 +396,9 @@ function AuthContent() {
             </h2>
 
             <div>
-              <h3 className="font-brand text-xl md:text-2xl lg:text-3xl font-extrabold tracking-[0.1em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
-                SYNAPSE QUIZ
+              <h3 className="flex items-center justify-center gap-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]" aria-label="Synapse Quiz">
+                <SynapseMark variant="white" className="h-10 md:h-12 w-auto" />
+                <SynapseWordmark accent={false} className="h-6 md:h-7 w-auto text-white" />
               </h3>
             </div>
 

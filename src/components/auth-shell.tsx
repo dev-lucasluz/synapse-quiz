@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Brain } from "lucide-react";
+import { SynapseMark, SynapseWordmark } from "@/components/brand-logo";
 
 /** Casca visual das telas simples de conta (recuperar senha, verificar e-mail). */
 export function AuthShell({
@@ -18,10 +18,8 @@ export function AuthShell({
         href="/"
         className="mb-4 inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white/70 px-4 py-1.5 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/60"
       >
-        <Brain size={14} className="text-amber-500 dark:text-amber-400" />
-        <span className="text-xs font-bold tracking-wider text-zinc-800 dark:text-zinc-200">
-          SYNAPSE QUIZ
-        </span>
+        <SynapseMark className="h-[18px] w-auto" />
+        <SynapseWordmark className="h-[13px] w-auto text-zinc-800 dark:text-zinc-200" />
       </Link>
 
       <div className="w-full max-w-md rounded-3xl border border-white/60 bg-white/85 p-6 shadow-2xl shadow-orange-950/10 backdrop-blur-xl dark:border-white/10 dark:bg-[#0c0d1a]/85 dark:shadow-black/60 sm:p-8">

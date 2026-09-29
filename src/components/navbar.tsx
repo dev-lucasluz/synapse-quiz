@@ -1,5 +1,6 @@
 "use client";
 
+import { SynapseMark, SynapseWordmark } from "@/components/brand-logo";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/components/theme-provider";
 import {
@@ -204,9 +205,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
             className="flex min-w-0 items-center gap-2.5 font-bold text-orange-600 dark:text-amber-400"
             title="Synapse Quiz"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-black border border-zinc-800 text-amber-400 shadow-2xs transition-transform hover:scale-105">
-              <Brain size={17} className="text-amber-400" />
-            </div>
+            <SynapseMark className="h-8 w-auto shrink-0 transition-transform hover:scale-105" />
             <span
               className={cn(
                 "whitespace-nowrap text-sm font-semibold tracking-tight text-zinc-900 transition-all duration-200 dark:text-zinc-50 overflow-hidden",
@@ -215,7 +214,7 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
                   : "max-w-[140px] opacity-100"
               )}
             >
-              Synapse <span className="text-orange-600 dark:text-amber-400">Quiz</span>
+              <SynapseWordmark className="h-[18px] w-auto" />
             </span>
           </Link>
 
@@ -493,12 +492,8 @@ export function Navbar({ userName, plan, avatarUrl, college, period }: NavbarPro
          ═══════════════════════════════════════════════════════════════════════ */}
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-zinc-200/80 bg-white/90 px-4 py-2.5 backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-900/90 md:hidden">
         <Link href="/dashboard" className="flex items-center gap-2 font-bold text-orange-600 dark:text-amber-400">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-black border border-zinc-800 text-amber-400">
-            <Brain size={16} className="text-amber-400" />
-          </div>
-          <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Synapse <span className="text-orange-600 dark:text-amber-400">Quiz</span>
-          </span>
+          <SynapseMark className="h-7 w-auto shrink-0" />
+          <SynapseWordmark className="h-4 w-auto text-zinc-900 dark:text-zinc-50" />
         </Link>
 
         <div className="flex items-center gap-2">

@@ -1,8 +1,8 @@
+import { SynapseMark, SynapseWordmark } from "@/components/brand-logo";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import {
-  Brain,
   Sparkles,
   BookOpen,
   Target,
@@ -51,16 +51,9 @@ export default async function HomePage() {
       {/* Top Navbar */}
       <header className="border-b border-zinc-200/80 bg-white/80 dark:border-zinc-800/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-black border border-zinc-800 flex items-center justify-center text-amber-400 shadow-xs">
-              <Brain className="h-5 w-5 text-amber-400" />
-            </div>
-            <span
-              style={{ fontFamily: "'Tourney', cursive" }}
-              className="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500"
-            >
-              SYNAPSE QUIZ
-            </span>
+          <div className="flex items-center gap-2.5" aria-label="Synapse Quiz">
+            <SynapseMark className="h-9 w-auto shrink-0" />
+            <SynapseWordmark className="h-[22px] w-auto text-zinc-900 dark:text-zinc-50" />
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
