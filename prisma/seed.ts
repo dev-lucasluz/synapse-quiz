@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 import fs from "fs";
 import path from "path";
 
@@ -26,11 +27,21 @@ const subjects = [
   { name: "Saúde Coletiva & Epidemiologia", period: 6, category: "Ciclo Clínico Inicial" },
 ];
 
+// Senhas das contas de demonstração: vêm do ambiente ou são geradas na hora e impressas no console.
+function seedPassword(envName: string): { value: string; generated: boolean } {
+  const fromEnv = process.env[envName];
+  if (fromEnv) return { value: fromEnv, generated: false };
+  return { value: randomBytes(9).toString("base64url"), generated: true };
+}
+const PRO_EMAIL = process.env.SEED_PRO_EMAIL || "pro@synapse.med";
+const PRO_NAME = process.env.SEED_PRO_NAME || "Estudante Pro";
+
 async function main() {
   console.log("🌱 Iniciando seed do banco de dados...");
 
   // 1. Criar usuário Demo (Free)
-  const passwordHash = await bcrypt.hash("senha-removida", 10);
+  const demoPw = seedPassword("SEED_DEMO_PASSWORD");
+  const passwordHash = await bcrypt.hash(demoPw.value, 10);
   const demoUser = await prisma.user.upsert({
     where: { email: "demo@synapse.med" },
     update: {},
@@ -42,21 +53,24 @@ async function main() {
     },
   });
   console.log(`✅ Usuário demo criado: ${demoUser.email}`);
+  if (demoPw.generated) console.log(`   Senha gerada (anote, não será mostrada de novo): ${demoPw.value}`);
 
   // 2. Criar usuário Pro sem limites
-  const proPasswordHash = await bcrypt.hash("senha-removida", 10);
+  const proPw = seedPassword("SEED_PRO_PASSWORD");
+  const proPasswordHash = await bcrypt.hash(proPw.value, 10);
   const proUser = await prisma.user.upsert({
-    where: { email: "pro@exemplo.com" },
+    where: { email: PRO_EMAIL },
     update: { plan: "pro" },
     create: {
-      name: "Estudante Pro",
-      email: "pro@exemplo.com",
+      name: PRO_NAME,
+      email: PRO_EMAIL,
       passwordHash: proPasswordHash,
       plan: "pro",
       referralCode: "SYN-PRO",
     },
   });
   console.log(`✅ Usuário Pro ilimitado criado: ${proUser.email}`);
+  if (proPw.generated) console.log(`   Senha gerada (anote, não será mostrada de novo): ${proPw.value}`);
 
   // 3. Criar matérias
   const subjectMap: Record<string, string> = {};

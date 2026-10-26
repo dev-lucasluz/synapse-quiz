@@ -2,6 +2,7 @@ import { createClient } from "@libsql/client";
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 import fs from "fs";
 import path from "path";
 import { migrateEmailCanonical } from "./email-canonical-migration";
@@ -170,6 +171,15 @@ const INITIAL_SUBJECTS = [
   { name: "Saúde Coletiva & Epidemiologia", period: 6, category: "Ciclo Clínico Inicial" },
 ];
 
+// Senhas das contas de demonstração: vêm do ambiente ou são geradas na hora e impressas no console.
+function seedPassword(envName: string): { value: string; generated: boolean } {
+  const fromEnv = process.env[envName];
+  if (fromEnv) return { value: fromEnv, generated: false };
+  return { value: randomBytes(9).toString("base64url"), generated: true };
+}
+const PRO_EMAIL = process.env.SEED_PRO_EMAIL || "pro@synapse.med";
+const PRO_NAME = process.env.SEED_PRO_NAME || "Estudante Pro";
+
 async function main() {
   const url = process.env.TURSO_DATABASE_URL;
   const authToken = process.env.TURSO_AUTH_TOKEN;
@@ -249,7 +259,8 @@ async function main() {
   console.log("✅ [Turso] 12 matérias configuradas.");
 
   // 2. Criar Usuário Demo
-  const demoHash = await bcrypt.hash("senha-removida", 10);
+  const demoPw = seedPassword("SEED_DEMO_PASSWORD");
+  const demoHash = await bcrypt.hash(demoPw.value, 10);
   const demoUser = await prisma.user.upsert({
     where: { email: "demo@synapse.med" },
     update: {},
@@ -262,14 +273,15 @@ async function main() {
     },
   });
 
-  // 3. Criar Usuário Pro Ilimitado (Janaína)
-  const proHash = await bcrypt.hash("senha-removida", 10);
+  // 3. Criar Usuário Pro Ilimitado
+  const proPw = seedPassword("SEED_PRO_PASSWORD");
+  const proHash = await bcrypt.hash(proPw.value, 10);
   const proUser = await prisma.user.upsert({
-    where: { email: "pro@exemplo.com" },
+    where: { email: PRO_EMAIL },
     update: { plan: "pro" },
     create: {
-      name: "Estudante Pro",
-      email: "pro@exemplo.com",
+      name: PRO_NAME,
+      email: PRO_EMAIL,
       passwordHash: proHash,
       plan: "pro",
       referralCode: "SYN-PRO",
@@ -329,7 +341,7 @@ async function main() {
   console.log(`📊 Questões processadas: ${inserted}`);
   console.log(`📊 TOTAL de questões no Turso: ${total}`);
   console.log(`🖼️ TOTAL de questões COM IMAGEM no Turso: ${totalImgs}`);
-  console.log(`👤 Usuário Ilimitado: pro@exemplo.com / (senha removida)`);
+  console.log(`👤 Usuário Ilimitado: ${PRO_EMAIL}${proPw.generated ? ` / ${proPw.value} (senha gerada)` : ""}`);
   console.log("========================================================\n");
 
   await prisma.$disconnect();

@@ -1,13 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("👤 Configurando usuário com acesso ilimitado (Plano Pro)...");
 
-  const email = "pro@exemplo.com";
-  const passwordPlain = "senha-removida";
+  const email = process.env.SEED_PRO_EMAIL || "pro@synapse.med";
+  const name = process.env.SEED_PRO_NAME || "Estudante Pro";
+  const generated = !process.env.SEED_PRO_PASSWORD;
+  const passwordPlain = process.env.SEED_PRO_PASSWORD || randomBytes(9).toString("base64url");
   const passwordHash = await bcrypt.hash(passwordPlain, 10);
 
   const user = await prisma.user.upsert({
@@ -15,11 +18,11 @@ async function main() {
     update: {
       passwordHash,
       plan: "pro", // Sem limites de questões ou funcionalidades
-      name: "Estudante Pro",
+      name,
     },
     create: {
       email,
-      name: "Estudante Pro",
+      name,
       passwordHash,
       plan: "pro", // Plano Pro permanente
       referralCode: "SYN-PRO",
@@ -32,6 +35,7 @@ async function main() {
   console.log(`   - E-mail: ${user.email}`);
   console.log(`   - Plano: ${user.plan.toUpperCase()} (SEM LIMITES)`);
   console.log(`   - Código de Indicação: ${user.referralCode}`);
+  if (generated) console.log(`   - Senha gerada (anote, não será mostrada de novo): ${passwordPlain}`);
 
   // Adicionar as 20 questões com imagem aos favoritos para teste no Caderno de Erros
   const imageQuestions = await prisma.question.findMany({
