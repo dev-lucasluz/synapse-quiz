@@ -33,7 +33,7 @@ function seedPassword(envName: string): { value: string; generated: boolean } {
   if (fromEnv) return { value: fromEnv, generated: false };
   return { value: randomBytes(9).toString("base64url"), generated: true };
 }
-const PRO_EMAIL = process.env.SEED_PRO_EMAIL || "pro@synapse.med";
+const PRO_EMAIL = process.env.SEED_PRO_EMAIL || "pro@exemplo.com";
 const PRO_NAME = process.env.SEED_PRO_NAME || "Estudante Pro";
 
 async function main() {

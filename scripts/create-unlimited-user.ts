@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("👤 Configurando usuário com acesso ilimitado (Plano Pro)...");
 
-  const email = process.env.SEED_PRO_EMAIL || "pro@synapse.med";
+  const email = process.env.SEED_PRO_EMAIL || "pro@exemplo.com";
   const name = process.env.SEED_PRO_NAME || "Estudante Pro";
   const generated = !process.env.SEED_PRO_PASSWORD;
   const passwordPlain = process.env.SEED_PRO_PASSWORD || randomBytes(9).toString("base64url");
@@ -16,7 +16,8 @@ async function main() {
   const user = await prisma.user.upsert({
     where: { email },
     update: {
-      passwordHash,
+      // Conta existente só troca de senha se SEED_PRO_PASSWORD for informada
+      ...(generated ? {} : { passwordHash }),
       plan: "pro", // Sem limites de questões ou funcionalidades
       name,
     },
