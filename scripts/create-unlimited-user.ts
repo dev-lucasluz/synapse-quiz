@@ -7,8 +7,12 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("👤 Configurando usuário com acesso ilimitado (Plano Pro)...");
 
-  const email = process.env.SEED_PRO_EMAIL || "pro@exemplo.com";
+  const email = process.env.SEED_PRO_EMAIL;
   const name = process.env.SEED_PRO_NAME || "Estudante Pro";
+  if (!email) {
+    console.error("Defina SEED_PRO_EMAIL (e, se quiser, SEED_PRO_NAME e SEED_PRO_PASSWORD).");
+    process.exit(1);
+  }
   const generated = !process.env.SEED_PRO_PASSWORD;
   const passwordPlain = process.env.SEED_PRO_PASSWORD || randomBytes(9).toString("base64url");
   const passwordHash = await bcrypt.hash(passwordPlain, 10);

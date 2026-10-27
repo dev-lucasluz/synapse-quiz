@@ -177,7 +177,8 @@ function seedPassword(envName: string): { value: string; generated: boolean } {
   if (fromEnv) return { value: fromEnv, generated: false };
   return { value: randomBytes(9).toString("base64url"), generated: true };
 }
-const PRO_EMAIL = process.env.SEED_PRO_EMAIL || "pro@exemplo.com";
+// Conta Pro opcional: só é criada se SEED_PRO_EMAIL estiver definido.
+const PRO_EMAIL = process.env.SEED_PRO_EMAIL;
 const PRO_NAME = process.env.SEED_PRO_NAME || "Estudante Pro";
 
 async function main() {
@@ -273,21 +274,24 @@ async function main() {
     },
   });
 
-  // 3. Criar Usuário Pro Ilimitado
-  const proPw = seedPassword("SEED_PRO_PASSWORD");
-  const proHash = await bcrypt.hash(proPw.value, 10);
-  const proUser = await prisma.user.upsert({
-    where: { email: PRO_EMAIL },
-    update: { plan: "pro" },
-    create: {
-      name: PRO_NAME,
-      email: PRO_EMAIL,
-      passwordHash: proHash,
-      plan: "pro",
-      referralCode: "SYN-PRO",
-    },
-  });
-  console.log(`✅ [Turso] Usuários criados: ${demoUser.email} (Free) e ${proUser.email} (Pro Ilimitado).`);
+  // 3. Criar Usuário Pro Ilimitado (opcional)
+  let proPw: { value: string; generated: boolean } | null = null;
+  if (PRO_EMAIL) {
+    proPw = seedPassword("SEED_PRO_PASSWORD");
+    const proHash = await bcrypt.hash(proPw.value, 10);
+    await prisma.user.upsert({
+      where: { email: PRO_EMAIL },
+      update: { plan: "pro" },
+      create: {
+        name: PRO_NAME,
+        email: PRO_EMAIL,
+        passwordHash: proHash,
+        plan: "pro",
+        referralCode: "SYN-PRO",
+      },
+    });
+  }
+  console.log(`✅ [Turso] Usuário demo criado: ${demoUser.email}.${PRO_EMAIL ? ` Pro: ${PRO_EMAIL}.` : ""}`);
 
   // 4. Inserir Questões do arquivo completo
   const jsonPath = path.resolve(process.cwd(), "synapse_questoes_completo.json");
@@ -341,7 +345,7 @@ async function main() {
   console.log(`📊 Questões processadas: ${inserted}`);
   console.log(`📊 TOTAL de questões no Turso: ${total}`);
   console.log(`🖼️ TOTAL de questões COM IMAGEM no Turso: ${totalImgs}`);
-  console.log(`👤 Usuário Ilimitado: ${PRO_EMAIL}${proPw.generated ? ` / ${proPw.value} (senha gerada)` : ""}`);
+  if (PRO_EMAIL) console.log(`👤 Usuário Ilimitado: ${PRO_EMAIL}${proPw?.generated ? ` / ${proPw.value} (senha gerada)` : ""}`);
   console.log("========================================================\n");
 
   await prisma.$disconnect();

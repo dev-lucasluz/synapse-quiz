@@ -33,7 +33,8 @@ function seedPassword(envName: string): { value: string; generated: boolean } {
   if (fromEnv) return { value: fromEnv, generated: false };
   return { value: randomBytes(9).toString("base64url"), generated: true };
 }
-const PRO_EMAIL = process.env.SEED_PRO_EMAIL || "pro@exemplo.com";
+// Conta Pro opcional: só é criada se SEED_PRO_EMAIL estiver definido.
+const PRO_EMAIL = process.env.SEED_PRO_EMAIL;
 const PRO_NAME = process.env.SEED_PRO_NAME || "Estudante Pro";
 
 async function main() {
@@ -55,22 +56,24 @@ async function main() {
   console.log(`✅ Usuário demo criado: ${demoUser.email}`);
   if (demoPw.generated) console.log(`   Senha gerada (anote, não será mostrada de novo): ${demoPw.value}`);
 
-  // 2. Criar usuário Pro sem limites
-  const proPw = seedPassword("SEED_PRO_PASSWORD");
-  const proPasswordHash = await bcrypt.hash(proPw.value, 10);
-  const proUser = await prisma.user.upsert({
-    where: { email: PRO_EMAIL },
-    update: { plan: "pro" },
-    create: {
-      name: PRO_NAME,
-      email: PRO_EMAIL,
-      passwordHash: proPasswordHash,
-      plan: "pro",
-      referralCode: "SYN-PRO",
-    },
-  });
-  console.log(`✅ Usuário Pro ilimitado criado: ${proUser.email}`);
-  if (proPw.generated) console.log(`   Senha gerada (anote, não será mostrada de novo): ${proPw.value}`);
+  // 2. Criar usuário Pro sem limites (opcional)
+  if (PRO_EMAIL) {
+    const proPw = seedPassword("SEED_PRO_PASSWORD");
+    const proPasswordHash = await bcrypt.hash(proPw.value, 10);
+    const proUser = await prisma.user.upsert({
+      where: { email: PRO_EMAIL },
+      update: { plan: "pro" },
+      create: {
+        name: PRO_NAME,
+        email: PRO_EMAIL,
+        passwordHash: proPasswordHash,
+        plan: "pro",
+        referralCode: "SYN-PRO",
+      },
+    });
+    console.log(`✅ Usuário Pro ilimitado criado: ${proUser.email}`);
+    if (proPw.generated) console.log(`   Senha gerada (anote, não será mostrada de novo): ${proPw.value}`);
+  }
 
   // 3. Criar matérias
   const subjectMap: Record<string, string> = {};
