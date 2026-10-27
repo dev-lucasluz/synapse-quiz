@@ -12,7 +12,7 @@ Plataforma de estudo ativo e repetição espaçada (SRS) com identidade editoria
 - **Estilização:** Tailwind CSS v4 com paleta clínica/editorial (Zinc neutro, Teal clínico)
 - **Banco de Dados:** Prisma ORM 6 com arquitetura Dual-Mode (SQLite local & Turso libSQL distribuído em produção)
 - **Segurança:** Autenticação por cookies HTTP-only, JWT (`jose`), senhas criptografadas com `bcryptjs`
-- **Acervo Médico:** Mais de 600 questões médicas completas com gabarito comentado, casos clínicos e imagens em alta resolução
+- **Acervo Médico:** Mais de 600 questões com gabarito comentado, casos clínicos e imagens clínicas. As questões foram geradas com IA (Claude e Gemini) e podem conter erros: não substituem material de estudo revisado
 - **PWA Ready:** Suporte a Progressive Web App instalável no desktop e mobile
 
 ---
@@ -59,3 +59,7 @@ scripts/        manutenção do banco e coleta de imagens clínicas
 ```
 
 As imagens clínicas e seus créditos estão na página `/creditos`.
+
+## 📄 Licença
+
+Código sob a licença [MIT](LICENSE). As imagens clínicas têm licenças próprias, listadas na página `/creditos`.

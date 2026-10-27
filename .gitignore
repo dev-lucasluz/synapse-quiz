@@ -61,3 +61,8 @@ next-env.d.ts
 
 # claude code local config
 .claude/
+
+# Arquivos de trabalho com IA: ficam só no computador local
+AGENTS.md
+CLAUDE.md
+docs/superpowers/
