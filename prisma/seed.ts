@@ -33,9 +33,9 @@ function seedPassword(envName: string): { value: string; generated: boolean } {
   if (fromEnv) return { value: fromEnv, generated: false };
   return { value: randomBytes(9).toString("base64url"), generated: true };
 }
-// Conta Pro opcional: só é criada se SEED_PRO_EMAIL estiver definido.
-const PRO_EMAIL = process.env.SEED_PRO_EMAIL;
-const PRO_NAME = process.env.SEED_PRO_NAME || "Estudante Pro";
+// Conta Pro de teste (e-mail, nome e senha podem ser trocados por variáveis de ambiente).
+const PRO_EMAIL = process.env.SEED_PRO_EMAIL || "janaina.pereira@test.com";
+const PRO_NAME = process.env.SEED_PRO_NAME || "Dra. Janaína Pereira";
 
 async function main() {
   console.log("🌱 Iniciando seed do banco de dados...");
@@ -56,7 +56,7 @@ async function main() {
   console.log(`✅ Usuário demo criado: ${demoUser.email}`);
   if (demoPw.generated) console.log(`   Senha gerada (anote, não será mostrada de novo): ${demoPw.value}`);
 
-  // 2. Criar usuário Pro sem limites (opcional)
+  // 2. Criar usuário Pro sem limites 
   if (PRO_EMAIL) {
     const proPw = seedPassword("SEED_PRO_PASSWORD");
     const proPasswordHash = await bcrypt.hash(proPw.value, 10);
@@ -68,7 +68,7 @@ async function main() {
         email: PRO_EMAIL,
         passwordHash: proPasswordHash,
         plan: "pro",
-        referralCode: "SYN-PRO",
+        referralCode: "SYN-JANAINA",
       },
     });
     console.log(`✅ Usuário Pro ilimitado criado: ${proUser.email}`);

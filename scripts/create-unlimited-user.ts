@@ -7,12 +7,8 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("👤 Configurando usuário com acesso ilimitado (Plano Pro)...");
 
-  const email = process.env.SEED_PRO_EMAIL;
-  const name = process.env.SEED_PRO_NAME || "Estudante Pro";
-  if (!email) {
-    console.error("Defina SEED_PRO_EMAIL (e, se quiser, SEED_PRO_NAME e SEED_PRO_PASSWORD).");
-    process.exit(1);
-  }
+  const email = process.env.SEED_PRO_EMAIL || "janaina.pereira@test.com";
+  const name = process.env.SEED_PRO_NAME || "Dra. Janaína Pereira";
   const generated = !process.env.SEED_PRO_PASSWORD;
   const passwordPlain = process.env.SEED_PRO_PASSWORD || randomBytes(9).toString("base64url");
   const passwordHash = await bcrypt.hash(passwordPlain, 10);
@@ -30,7 +26,7 @@ async function main() {
       name,
       passwordHash,
       plan: "pro", // Plano Pro permanente
-      referralCode: "SYN-PRO",
+      referralCode: "SYN-JANAINA",
     },
   });
 

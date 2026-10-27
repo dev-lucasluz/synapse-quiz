@@ -177,9 +177,9 @@ function seedPassword(envName: string): { value: string; generated: boolean } {
   if (fromEnv) return { value: fromEnv, generated: false };
   return { value: randomBytes(9).toString("base64url"), generated: true };
 }
-// Conta Pro opcional: só é criada se SEED_PRO_EMAIL estiver definido.
-const PRO_EMAIL = process.env.SEED_PRO_EMAIL;
-const PRO_NAME = process.env.SEED_PRO_NAME || "Estudante Pro";
+// Conta Pro de teste (e-mail, nome e senha podem ser trocados por variáveis de ambiente).
+const PRO_EMAIL = process.env.SEED_PRO_EMAIL || "janaina.pereira@test.com";
+const PRO_NAME = process.env.SEED_PRO_NAME || "Dra. Janaína Pereira";
 
 async function main() {
   const url = process.env.TURSO_DATABASE_URL;
@@ -274,7 +274,7 @@ async function main() {
     },
   });
 
-  // 3. Criar Usuário Pro Ilimitado (opcional)
+  // 3. Criar Usuário Pro Ilimitado 
   let proPw: { value: string; generated: boolean } | null = null;
   if (PRO_EMAIL) {
     proPw = seedPassword("SEED_PRO_PASSWORD");
@@ -287,7 +287,7 @@ async function main() {
         email: PRO_EMAIL,
         passwordHash: proHash,
         plan: "pro",
-        referralCode: "SYN-PRO",
+        referralCode: "SYN-JANAINA",
       },
     });
   }
